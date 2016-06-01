@@ -3,62 +3,64 @@ using System.Collections;
 
 public class VRInputManager : MonoBehaviour {
 
-    public ControllerInputTracker controller1;
-    public ControllerInputTracker controller2;
+    public ControllerInputTracker controllerLeft;
+    public ControllerInputTracker controllerRight;
 
-    public bool triggerDown
+    public ControllerInputTracker[] controllers;
+
+    void Start()
     {
-        get
-        {
-            return trigger1Down || trigger2Down;
-        }
+        controllers = new ControllerInputTracker[16];
     }
 
-    public bool trigger1Down
+    void Update()
     {
-        get
-        {
-            return controller1.triggerDown;
-        }
+        controllers[controllerLeft.index] = controllerLeft;
+        controllers[controllerRight.index] = controllerRight;
     }
 
-    public bool trigger2Down
+    public bool TriggerDown(int index)
     {
-        get
+        if (controllers[index] != null)
         {
-            return controller2.triggerDown;
+            return controllers[index].triggerDown;
         }
+        else return false;
     }
 
-    public Vector3 controller1Position
+    public Vector3 controllerPosition(int index)
     {
-        get
+        if (controllers[index] != null)
         {
-            return controller1.position;
+            return controllers[index].position;
         }
+        else return Vector3.zero;
     }
 
-    public Vector3 controller2Position
+    public Quaternion controllerRotation(int index)
     {
-        get
+        if (controllers[index] != null)
         {
-            return controller2.position;
+            return controllers[index].rotation;
         }
+        else return Quaternion.identity;
     }
 
-    public Quaternion controller1Rotation
+    public Vector3 controllerVelocity(int index)
     {
-        get
+        if (controllers[index] != null)
         {
-            return controller1.rotation;
+            return controllers[index].velocity;
         }
+        else return Vector3.zero;
     }
 
-    public Quaternion controller2Rotation
+    public Vector3 controllerAngularVelocity(int index)
     {
-        get
+        if (controllers[index] != null)
         {
-            return controller2.rotation;
+            return controllers[index].angularVelocity;
         }
+        else return Vector3.zero;
     }
 }
