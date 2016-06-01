@@ -5,57 +5,73 @@ using System.Collections;
 public class Hand : MonoBehaviour {
 
     private VRInputManager vrInput;
-    public int controllerIndex;
+    public int deviceIndex;
 
     public LayerMask collisionMask;
 
     public Rigidbody tip;
     public GameObject highlightedObject;
     public GameObject heldObject;
-    
+
+    private FixedJoint joint;
 
     void Start()
     {
-        controllerIndex = GetComponentInParent<ControllerInputTracker>().index;
+        deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
         vrInput = GameObject.FindGameObjectWithTag("VRInputManager").GetComponent<VRInputManager>();
         transform.position = tip.transform.position;
     }
 
     void Update()
     {
-        CheckHandCollision();
+        CheckInputs();
     }
 
-    private void CheckHandCollision()
+    private void CheckInputs()
     {
-        if (vrInput.TriggerDown(controllerIndex))
+        if (vrInput.TriggerDown(deviceIndex))
         {
-            if (heldObject != null)
+            if(heldObject != null)
             {
-                Drop(heldObject);
+                heldObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
             }
             else if (highlightedObject != null)
             {
                 Pickup(highlightedObject);
             }
         }
+        if (vrInput.TriggerUp(deviceIndex))
+        {
+            if(heldObject != null)
+            {
+                heldObject.SendMessage("DeActivate", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+        if (vrInput.GripDown(deviceIndex))
+        {
+            if (heldObject != null)
+            {
+                Drop(heldObject);
+            }
+        }
     }
     
     private void Pickup(GameObject picked)
     {
+        picked.SendMessage("Pickup", deviceIndex, SendMessageOptions.DontRequireReceiver);
+        joint = picked.AddComponent<FixedJoint>();
+        joint.connectedBody = tip;
         heldObject = picked;
-        picked.transform.parent = transform;
-        picked.GetComponent<Rigidbody>().isKinematic = true;
     }
 
     private void Drop(GameObject held)
     {
-        held.transform.parent = null;
-        Rigidbody heldRigidbody = heldObject.GetComponent<Rigidbody>();
-        heldRigidbody.isKinematic = false;
-        heldRigidbody.velocity = vrInput.controllerVelocity(controllerIndex);
-        heldRigidbody.angularVelocity = vrInput.controllerAngularVelocity(controllerIndex);
+        Rigidbody heldRigidbody = held.GetComponent<Rigidbody>();
+        heldRigidbody.velocity = vrInput.controllerVelocity(deviceIndex);
+        heldRigidbody.angularVelocity = vrInput.controllerAngularVelocity(deviceIndex);
         heldRigidbody.maxAngularVelocity = heldRigidbody.angularVelocity.magnitude;
+        Destroy(joint);
+        joint = null;
         heldObject = null;
     }
 

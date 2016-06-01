@@ -6,7 +6,7 @@ public class VRInputManager : MonoBehaviour {
     public ControllerInputTracker controllerLeft;
     public ControllerInputTracker controllerRight;
 
-    public ControllerInputTracker[] controllers;
+    public ControllerInputTracker[] controllers; //Change to a more generic device input tracker?
 
     void Start()
     {
@@ -24,6 +24,24 @@ public class VRInputManager : MonoBehaviour {
         if (controllers[index] != null)
         {
             return controllers[index].triggerDown;
+        }
+        else return false;
+    }
+
+    public bool TriggerUp(int index)
+    {
+        if (controllers[index] != null)
+        {
+            return controllers[index].triggerUp;
+        }
+        else return false;
+    }
+
+    public bool GripDown(int index)
+    {
+        if (controllers[index] != null)
+        {
+            return controllers[index].gripDown;
         }
         else return false;
     }

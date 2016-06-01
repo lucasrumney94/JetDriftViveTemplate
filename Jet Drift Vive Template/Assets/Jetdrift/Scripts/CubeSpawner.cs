@@ -4,7 +4,7 @@ using System.Collections;
 public class CubeSpawner : MonoBehaviour {
 
     private VRInputManager vrInput;
-    public int controllerIndex;
+    public int deviceIndex;
 
     public GameObject cubePrefab;
 
@@ -12,17 +12,17 @@ public class CubeSpawner : MonoBehaviour {
 
     void Start()
     {
-        controllerIndex = GetComponentInParent<ControllerInputTracker>().index;
+        deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
         vrInput = GameObject.FindGameObjectWithTag("VRInputManager").GetComponent<VRInputManager>();
     }
 
     void Update()
     {
-        if (vrInput.TriggerDown(controllerIndex))
+        if (vrInput.TriggerDown(deviceIndex))
         {
-            Debug.Log("controller #" + controllerIndex + " spawned a cube!");
-            GameObject newCube = Instantiate(cubePrefab, vrInput.controllerPosition(controllerIndex), 
-                vrInput.controllerRotation(controllerIndex)) as GameObject;
+            Debug.Log("controller #" + deviceIndex + " spawned a cube!");
+            GameObject newCube = Instantiate(cubePrefab, vrInput.controllerPosition(deviceIndex), 
+                vrInput.controllerRotation(deviceIndex)) as GameObject;
             newCube.transform.position += newCube.transform.forward * 0.1f;
             newCube.GetComponent<Rigidbody>().velocity = newCube.transform.forward * initialForce;
         }
