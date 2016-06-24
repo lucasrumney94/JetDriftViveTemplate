@@ -11,7 +11,6 @@ public class VRUI : MonoBehaviour
 
     //Define Canvases
     public Canvas debugCanvas;
-    public Canvas OverlayCanvas;
 
     void Start ()
     {
@@ -19,8 +18,7 @@ public class VRUI : MonoBehaviour
         deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
         vrInput = transform.GetComponentInParent<ControllerInputTracker>();
 
-        vrInput.menuPressedDown += new ControllerInputDelegate(ToggleDebugMenu);
-        vrInput.touchpadTouchedDown += new ControllerInputDelegate(ToggleOverlayMenu);
+        vrInput.touchpadTouchedDown += new ControllerInputDelegate(ToggleDebugMenu);
     }
 	
 	// Update is called once per frame
@@ -32,9 +30,5 @@ public class VRUI : MonoBehaviour
     void ToggleDebugMenu()
     {
         debugCanvas.enabled = !debugCanvas.enabled;
-    }
-    void ToggleOverlayMenu()
-    {
-        OverlayCanvas.enabled = !OverlayCanvas.enabled;
     }
 }
