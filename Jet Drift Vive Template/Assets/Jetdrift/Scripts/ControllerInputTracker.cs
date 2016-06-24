@@ -15,6 +15,17 @@ public class ControllerInputTracker : MonoBehaviour {
 
     public Vector2 touchpadAxis;
 
+    public float touchpadAngle
+    {
+        get
+        {
+            return TouchpadAngle(touchpadAxis);
+        }
+    }
+
+    public float dpadDeadzone = 0.25f; //Inside this circle at the center of the touchpad no direction is registered
+    public string dpadDirection = "None";
+
     public float triggerAxis;
 
     public bool triggerTouched; //Light pull
@@ -42,7 +53,27 @@ public class ControllerInputTracker : MonoBehaviour {
     public event ControllerInputDelegate touchpadPressedDown;
     public event ControllerInputDelegate touchpadPressedUp;
 
-    //possibly add events for each quadrant of touchpad?
+    public event ControllerInputDelegate dpadUpTouchedStart;
+    public event ControllerInputDelegate dpadDownTouchedStart;
+    public event ControllerInputDelegate dpadRightTouchedStart;
+    public event ControllerInputDelegate dpadLeftTouchedStart;
+
+    public event ControllerInputDelegate dpadUpTouchedEnd;
+    public event ControllerInputDelegate dpadDownTouchedEnd;
+    public event ControllerInputDelegate dpadRightTouchedEnd;
+    public event ControllerInputDelegate dpadLeftTouchedEnd;
+
+    public event ControllerInputDelegate dpadUpPressedStart;
+    public event ControllerInputDelegate dpadDownPressedStart;
+    public event ControllerInputDelegate dpadRightPressedStart;
+    public event ControllerInputDelegate dpadLeftPressedStart;
+
+    public event ControllerInputDelegate dpadUpPressedEnd;
+    public event ControllerInputDelegate dpadDownPressedEnd;
+    public event ControllerInputDelegate dpadRightPressedEnd;
+    public event ControllerInputDelegate dpadLeftPressedEnd;
+
+    //Events cannot be passed as arguements, so there is no simple way to reference them cleanly
 
     private void OnTriggerTouchedDown()
     {
@@ -137,6 +168,134 @@ public class ControllerInputTracker : MonoBehaviour {
         if (touchpadPressedUp != null)
         {
             touchpadPressedUp();
+        }
+    }
+
+    private void OnDpadUpTouchedStart()
+    {
+        if (dpadUpTouchedStart != null)
+        {
+            dpadUpTouchedStart();
+        }
+    }
+
+    private void OnDpadDownTouchedStart()
+    {
+        if (dpadDownTouchedStart != null)
+        {
+            dpadDownTouchedStart();
+        }
+    }
+
+    private void OnDpadRightTouchedStart()
+    {
+        if (dpadRightTouchedStart != null)
+        {
+            dpadRightTouchedStart();
+        }
+    }
+
+    private void OnDpadLeftTouchedStart()
+    {
+        if (dpadLeftTouchedStart != null)
+        {
+            dpadLeftTouchedStart();
+        }
+    }
+
+    private void OnDpadUpTouchedEnd()
+    {
+        if (dpadUpTouchedEnd != null)
+        {
+            dpadUpTouchedEnd();
+        }
+    }
+
+    private void OnDpadDownTouchedEnd()
+    {
+        if (dpadDownTouchedEnd != null)
+        {
+            dpadDownTouchedEnd();
+        }
+    }
+
+    private void OnDpadRightTouchedEnd()
+    {
+        if (dpadRightTouchedEnd != null)
+        {
+            dpadRightTouchedEnd();
+        }
+    }
+
+    private void OnDpadLeftTouchedEnd()
+    {
+        if (dpadLeftTouchedEnd != null)
+        {
+            dpadLeftTouchedEnd();
+        }
+    }
+
+    private void OnDpadUpPressedStart()
+    {
+        if (dpadUpPressedStart != null)
+        {
+            dpadUpPressedStart();
+        }
+    }
+
+    private void OnDpadDownPressedStart()
+    {
+        if (dpadDownPressedStart != null)
+        {
+            dpadDownPressedStart();
+        }
+    }
+
+    private void OnDpadRightPressedStart()
+    {
+        if (dpadRightPressedStart != null)
+        {
+            dpadRightPressedStart();
+        }
+    }
+
+    private void OnDpadLeftPressedStart()
+    {
+        if (dpadLeftPressedStart != null)
+        {
+            dpadLeftPressedStart();
+        }
+    }
+
+    private void OnDpadUpPressedEnd()
+    {
+        if (dpadUpPressedEnd != null)
+        {
+            dpadUpPressedEnd();
+        }
+    }
+
+    private void OnDpadDownPressedEnd()
+    {
+        if (dpadDownPressedEnd != null)
+        {
+            dpadDownPressedEnd();
+        }
+    }
+
+    private void OnDpadRightPressedEnd()
+    {
+        if (dpadRightPressedEnd != null)
+        {
+            dpadRightPressedEnd();
+        }
+    }
+
+    private void OnDpadLeftPressedEnd()
+    {
+        if (dpadLeftPressedEnd != null)
+        {
+            dpadLeftPressedEnd();
         }
     }
 
@@ -247,13 +406,52 @@ public class ControllerInputTracker : MonoBehaviour {
             OnTouchpadPressedUp();
         }
 
-        //triggerDown = controller.GetPressDown(trigger);
-        //triggerUp = controller.GetPressUp(trigger);
-        //triggerHeld = controller.GetPress(trigger);
-        //triggerTouched = controller.GetTouch(trigger);
+        //Check for touchpad direction
+        if (touchpadTouched == true)
+        {
+            dpadDirection = DPadDirection(touchpadAngle);
+        }
+        else
+        {
+            dpadDirection = "None";
+        }
+    }
 
-        //gripDown = controller.GetPressDown(grip);
-        //gripUp = controller.GetPressUp(grip);
-        //gripHeld = controller.GetPress(grip);
+    private float TouchpadAngle(Vector2 touchpadAxis)
+    {
+        if (touchpadAxis == Vector2.zero)
+        {
+            return 0f;
+        }
+        float angle = Mathf.Atan2(touchpadAxis.y, touchpadAxis.x) * Mathf.Rad2Deg;
+        if (angle < 0f)
+        {
+            angle += 360f;
+        }
+        return angle;
+    }
+
+    private string DPadDirection(float angle)
+    {
+        if (touchpadAxis.magnitude < dpadDeadzone)
+        {
+            return "None";
+        }
+        else if (45f < angle && angle <= 135f)
+        {
+            return "Up";
+        }
+        else if (135f < angle && angle <= 225f)
+        {
+            return "Left";
+        }
+        else if (225f < angle && angle <= 315f)
+        {
+            return "Down";
+        }
+        else
+        {
+            return "Right";
+        }
     }
 }

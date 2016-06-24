@@ -20,6 +20,8 @@ public class InputChecker : MonoBehaviour {
 
     public Text triggerStrength;
     public Text touchpadAxis;
+    public Text touchpadAngle;
+    public Text dpadDirection;
 
     private ControllerInputTracker inputTracker;
 
@@ -45,6 +47,8 @@ public class InputChecker : MonoBehaviour {
     {
         UpdateTriggerStrength(inputTracker.triggerAxis);
         UpdateTouchpadAxis(inputTracker.touchpadAxis);
+        UpdateTouchpadAngle(inputTracker.touchpadAngle);
+        UpdateDPadDirection(inputTracker.dpadDirection);
     }
 
     public void TriggerTouchedDown()
@@ -114,6 +118,16 @@ public class InputChecker : MonoBehaviour {
 
     public void UpdateTouchpadAxis(Vector2 axis)
     {
-        touchpadAxis.text = string.Format("Touch Position, ({0:F3}, {1:F3})", axis.x, axis.y);
+        touchpadAxis.text = string.Format("Touch Position: ({0:F3}, {1:F3})", axis.x, axis.y);
+    }
+
+    public void UpdateTouchpadAngle(float angle)
+    {
+        touchpadAngle.text = string.Format("Touch Angle: {0:F1}", angle);
+    }
+
+    public void UpdateDPadDirection(string direction)
+    {
+        dpadDirection.text = string.Format("DPad Direction: {0}", direction);
     }
 }
