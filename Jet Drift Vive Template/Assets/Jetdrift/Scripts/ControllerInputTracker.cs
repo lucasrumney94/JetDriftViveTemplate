@@ -14,19 +14,20 @@ public class ControllerInputTracker : MonoBehaviour {
     public Vector3 angularVelocity;
 
     public Vector2 touchpadAxis;
+    private Vector2 lastTouchpadAxis;
+    public Vector2 touchpadAxisDelta;
 
-    public float touchpadAngle
-    {
-        get
-        {
-            return TouchpadAngle(touchpadAxis);
-        }
-    }
+    public float touchpadAngle;
+    private float lastTouchpadAngle;
+    public float touchpadAngleDelta;
 
-    public float dpadDeadzone = 0.25f; //Inside this circle at the center of the touchpad no direction is registered
+    public float dpadDeadzone = 0.25f; //Inside a circle of this radius at the center of the touchpad no direction is registered
     public string dpadDirection = "None";
+    private string lastDpadDirection;
 
-    public float triggerAxis;
+    public float triggerStrength;
+    private float lastTriggerStrength;
+    public float triggerStrengthDelta;
 
     public bool triggerTouched; //Light pull
     public bool triggerPressed; //Heavy pull, triggers directly before 'click' on trigger is heard
@@ -337,8 +338,14 @@ public class ControllerInputTracker : MonoBehaviour {
         velocity = origin.TransformVector(controller.velocity);
         angularVelocity = origin.TransformVector(controller.angularVelocity);
 
+        triggerStrength = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x;
+        triggerStrengthDelta = triggerStrength - lastTriggerStrength;
+
         touchpadAxis = controller.GetAxis();
-        triggerAxis = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x;
+        touchpadAxisDelta = touchpadAxis = lastTouchpadAxis;
+
+        touchpadAngle = GetTouchpadAngle(touchpadAxis);
+        touchpadAngleDelta = touchpadAngle - lastTouchpadAngle;
 
         if (controller.GetTouchDown(triggerMask))
         {
@@ -407,17 +414,40 @@ public class ControllerInputTracker : MonoBehaviour {
         }
 
         //Check for touchpad direction
-        if (touchpadTouched == true)
+        if (touchpadPressed == true)
         {
-            dpadDirection = DPadDirection(touchpadAngle);
+            dpadDirection = GetDPadDirection(touchpadAngle);
+        }
+        else if (touchpadTouched == true)
+        {
+            dpadDirection = GetDPadDirection(touchpadAngle);
         }
         else
         {
             dpadDirection = "None";
         }
+
+        if (dpadDirection != lastDpadDirection)
+        {
+            if (touchpadPressed == true)
+            {
+                DpadPressEnd(lastDpadDirection);
+                DpadPressStart(lastDpadDirection);
+            }
+            else if (touchpadTouched == true)
+            {
+                DpadTouchEnd(lastDpadDirection);
+                DpadTouchStart(dpadDirection);
+            }
+        }
+
+        lastTriggerStrength = triggerStrength;
+        lastTouchpadAxis = touchpadAxis;
+        lastTouchpadAngle = touchpadAngle;
+        lastDpadDirection = dpadDirection;
     }
 
-    private float TouchpadAngle(Vector2 touchpadAxis)
+    private float GetTouchpadAngle(Vector2 touchpadAxis)
     {
         if (touchpadAxis == Vector2.zero)
         {
@@ -431,7 +461,7 @@ public class ControllerInputTracker : MonoBehaviour {
         return angle;
     }
 
-    private string DPadDirection(float angle)
+    private string GetDPadDirection(float angle)
     {
         if (touchpadAxis.magnitude < dpadDeadzone)
         {
@@ -452,6 +482,86 @@ public class ControllerInputTracker : MonoBehaviour {
         else
         {
             return "Right";
+        }
+    }
+
+    private void DpadTouchStart(string direction)
+    {
+        if (direction == "Up")
+        {
+            OnDpadUpTouchedStart();
+        }
+        else if (direction == "Down")
+        {
+            OnDpadDownTouchedStart();
+        }
+        else if (direction == "Right")
+        {
+            OnDpadRightTouchedStart();
+        }
+        else if (direction == "Left")
+        {
+            OnDpadLeftTouchedStart();
+        }
+    }
+
+    private void DpadTouchEnd(string direction)
+    {
+        if (direction == "Up")
+        {
+            OnDpadUpTouchedEnd();
+        }
+        else if (direction == "Down")
+        {
+            OnDpadDownTouchedEnd();
+        }
+        else if (direction == "Right")
+        {
+            OnDpadRightTouchedEnd();
+        }
+        else if (direction == "Left")
+        {
+            OnDpadLeftTouchedEnd();
+        }
+    }
+
+    private void DpadPressStart(string direction)
+    {
+        if (direction == "Up")
+        {
+            OnDpadUpPressedStart();
+        }
+        else if (direction == "Down")
+        {
+            OnDpadDownPressedStart();
+        }
+        else if (direction == "Right")
+        {
+            OnDpadRightPressedStart();
+        }
+        else if (direction == "Left")
+        {
+            OnDpadLeftPressedStart();
+        }
+    }
+
+    private void DpadPressEnd(string direction)
+    {
+        if (direction == "Up")
+        {
+            OnDpadUpPressedEnd();
+        }
+        else if (direction == "Down")
+        {
+            OnDpadDownPressedEnd();
+        }
+        else if (direction == "Right")
+        {
+            OnDpadRightPressedEnd();
+        }
+        else if (direction == "Left")
+        {
+            OnDpadLeftPressedEnd();
         }
     }
 }

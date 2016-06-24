@@ -45,7 +45,7 @@ public class InputChecker : MonoBehaviour {
 
     void Update()
     {
-        UpdateTriggerStrength(inputTracker.triggerAxis);
+        UpdateTriggerStrength(inputTracker.triggerStrength);
         UpdateTouchpadAxis(inputTracker.touchpadAxis);
         UpdateTouchpadAngle(inputTracker.touchpadAngle);
         UpdateDPadDirection(inputTracker.dpadDirection);

@@ -20,7 +20,7 @@ public class CubeSpawner : MonoBehaviour {
 
     void Update()
     {
-        if (vrInput.triggerAxis == 1f)
+        if (vrInput.triggerStrength == 1f)
         {
             SpawnCube();
         }
