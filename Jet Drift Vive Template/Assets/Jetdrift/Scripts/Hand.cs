@@ -4,8 +4,10 @@ using System.Collections;
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Hand : MonoBehaviour {
 
-    private VRInputManager vrInput;
+    private ControllerInputTracker vrInput;
     public int deviceIndex;
+
+    public float forceMultiplier = 1.5f;
 
     public LayerMask collisionMask;
 
@@ -18,41 +20,40 @@ public class Hand : MonoBehaviour {
     void Start()
     {
         deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
-        vrInput = GameObject.FindGameObjectWithTag("VRInputManager").GetComponent<VRInputManager>();
+        vrInput = transform.GetComponentInParent<ControllerInputTracker>();
         transform.position = tip.transform.position;
+
+        vrInput.triggerPressedDown += new ControllerInputDelegate(TryPickup);
+        vrInput.triggerPressedUp += new ControllerInputDelegate(DeactivateHeld);
+        vrInput.triggerPressedUp += new ControllerInputDelegate(TryPickup);
+        vrInput.gripPressedDown += new ControllerInputDelegate(TryDrop);
     }
 
-    void Update()
+    public void TryPickup()
     {
-        CheckInputs();
+        if (heldObject != null)
+        {
+            heldObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
+        }
+        else if (highlightedObject != null)
+        {
+            Pickup(highlightedObject);
+        }
     }
 
-    private void CheckInputs()
+    public void DeactivateHeld()
     {
-        if (vrInput.TriggerDown(deviceIndex))
+        if (heldObject != null)
         {
-            if(heldObject != null)
-            {
-                heldObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
-            }
-            else if (highlightedObject != null)
-            {
-                Pickup(highlightedObject);
-            }
+            heldObject.SendMessage("DeActivate", SendMessageOptions.DontRequireReceiver);
         }
-        if (vrInput.TriggerUp(deviceIndex))
+    }
+
+    public void TryDrop()
+    {
+        if (heldObject != null)
         {
-            if(heldObject != null)
-            {
-                heldObject.SendMessage("DeActivate", SendMessageOptions.DontRequireReceiver);
-            }
-        }
-        if (vrInput.GripDown(deviceIndex))
-        {
-            if (heldObject != null)
-            {
-                Drop(heldObject);
-            }
+            Drop(heldObject);
         }
     }
     
@@ -67,8 +68,8 @@ public class Hand : MonoBehaviour {
     private void Drop(GameObject held)
     {
         Rigidbody heldRigidbody = held.GetComponent<Rigidbody>();
-        heldRigidbody.velocity = vrInput.controllerVelocity(deviceIndex);
-        heldRigidbody.angularVelocity = vrInput.controllerAngularVelocity(deviceIndex);
+        heldRigidbody.velocity = vrInput.velocity * forceMultiplier;
+        heldRigidbody.angularVelocity = vrInput.angularVelocity;
         heldRigidbody.maxAngularVelocity = heldRigidbody.angularVelocity.magnitude;
         Destroy(joint);
         joint = null;
