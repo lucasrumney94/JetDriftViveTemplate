@@ -42,7 +42,6 @@ public class Toolbox : MonoBehaviour {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
         inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
-        inputTracker.triggerTouchedDown += new ControllerInputDelegate(SelectHighlighted);
     }
 
     void Update()
