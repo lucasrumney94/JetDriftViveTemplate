@@ -37,8 +37,6 @@ public class Toolbox : MonoBehaviour {
     private VRTool activeTool;
     private VRTool[] toolInstances; //When a tool is spawned cache a reference to it, and activate/deactivate that instance instead of creating and destroying instances
 
-    private Option[] activeToolOptions;
-
     void Start()
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
@@ -125,11 +123,6 @@ public class Toolbox : MonoBehaviour {
 
         //Disable canvas
         selectionCanvas.gameObject.SetActive(false);
-    }
-
-    private void SelectHighlighted()
-    {
-        //Set highlighted item from list as activetool
     }
 
     #endregion
