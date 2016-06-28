@@ -6,6 +6,7 @@ public delegate void ControllerInputDelegate();
 public class ControllerInputTracker : MonoBehaviour {
 
     private Transform origin;
+    private ushort maxPulseLength = 3999;
 
     public Vector3 position;
     public Quaternion rotation;
@@ -445,6 +446,12 @@ public class ControllerInputTracker : MonoBehaviour {
         lastTouchpadAxis = touchpadAxis;
         lastTouchpadAngle = touchpadAngle;
         lastDpadDirection = dpadDirection;
+    }
+
+    public void VibrateController(ushort microSeconds)
+    {
+        ushort duration = microSeconds > maxPulseLength ? maxPulseLength : microSeconds;
+        controller.TriggerHapticPulse(duration);
     }
 
     private float GetTouchpadAngle(Vector2 touchpadAxis)
