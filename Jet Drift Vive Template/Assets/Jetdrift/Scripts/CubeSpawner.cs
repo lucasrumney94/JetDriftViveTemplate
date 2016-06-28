@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CubeSpawner : MonoBehaviour {
+public class CubeSpawner : VRTool {
 
     private ControllerInputTracker vrInput;
     public int deviceIndex;
@@ -9,6 +9,8 @@ public class CubeSpawner : MonoBehaviour {
     public GameObject cubePrefab;
 
     public float initialForce;
+    public float scale;
+    public bool spawnEveryFrame;
 
     void Start()
     {
@@ -16,6 +18,19 @@ public class CubeSpawner : MonoBehaviour {
         vrInput = transform.GetComponentInParent<ControllerInputTracker>();
 
         vrInput.triggerPressedDown += new ControllerInputDelegate(SpawnCube);
+    }
+
+    void OnEnable()
+    {
+        InitializeOptions();
+    }
+
+    public override void InitializeOptions()
+    {
+        toolOptions = new Option[3];
+        toolOptions[0] = new Option(ref initialForce);
+        toolOptions[1] = new Option(ref scale);
+        toolOptions[2] = new Option(ref spawnEveryFrame);
     }
 
     void Update()

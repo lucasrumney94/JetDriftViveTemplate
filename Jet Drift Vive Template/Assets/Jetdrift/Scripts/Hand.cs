@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
-public class Hand : MonoBehaviour {
+public class Hand : VRTool {
 
     private ControllerInputTracker vrInput;
     public int deviceIndex;
@@ -27,6 +27,17 @@ public class Hand : MonoBehaviour {
         vrInput.triggerPressedUp += new ControllerInputDelegate(DeactivateHeld);
         vrInput.triggerPressedUp += new ControllerInputDelegate(TryPickup);
         vrInput.gripPressedDown += new ControllerInputDelegate(TryDrop);
+    }
+
+    void OnEnable()
+    {
+        InitializeOptions();
+    }
+
+    public override void InitializeOptions()
+    {
+        toolOptions = new Option[1];
+        toolOptions[0] = new Option(ref forceMultiplier);
     }
 
     public void TryPickup()

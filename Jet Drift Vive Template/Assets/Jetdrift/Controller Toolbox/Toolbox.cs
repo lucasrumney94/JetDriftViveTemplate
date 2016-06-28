@@ -1,23 +1,101 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
+
+public struct Option
+{
+    public Type type;
+
+    public bool boolValue;
+    public float floatValue;
+
+    public Option(ref float newFloat)
+    {
+        type = typeof(float);
+        boolValue = false;
+        floatValue = newFloat;
+    }
+
+    public Option(ref bool newBool)
+    {
+        type = typeof(bool);
+        boolValue = newBool;
+        floatValue = 0f;
+    }
+}
 
 public class Toolbox : MonoBehaviour {
 
     private ControllerInputTracker inputTracker;
 
     public Canvas selectionCanvas;
+    public Canvas toolOptionsCanvas;
 
-    public GameObject[] toolPrefabs;
+    public VRTool[] toolPrefabs;
+
+    private VRTool activeTool;
+    private VRTool[] toolInstances; //When a tool is spawned cache a reference to it, and activate/deactivate that instance instead of creating and destroying instances
+
+    private Option[] activeToolOptions;
 
     void Start()
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
-        inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolbocMenu);
+        inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
+        inputTracker.triggerTouchedDown += new ControllerInputDelegate(SelectHighlighted);
     }
 
-    public void ToggleToolbocMenu()
+    void Update()
+    {
+        ListenForLongPress();
+    }
+
+    #region Press length detection
+
+    private bool listeningForLongPress = false;
+    private float timeOfLastMenuDown;
+
+    private void StartListeningForLongPress()
+    {
+        listeningForLongPress = true;
+    }
+
+    private void StopListeningForLongPress()
+    {
+        listeningForLongPress = false;
+    }
+
+    private void ListenForLongPress()
+    {
+        if (listeningForLongPress)
+        {
+            if (Time.time - timeOfLastMenuDown < 1f)
+            {
+                if (inputTracker.menuPressed == false)
+                {
+                    //Stop Listneing
+                    StopListeningForLongPress();
+                    //Do short press action
+                    ToggleToolOptions();
+                }
+            }
+            else
+            {
+                //Stop listening
+                StopListeningForLongPress();
+                //Do long press action
+                ToggleToolboxMenu();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Toolbox menu
+
+    public void ToggleToolboxMenu()
     {
         if (selectionCanvas.enabled)
         {
@@ -29,26 +107,50 @@ public class Toolbox : MonoBehaviour {
         }
     }
 
-    public void OpenToolboxMenu()
+    private void OpenToolboxMenu()
     {
         //Temporarily disable active tool
+        activeTool.gameObject.SetActive(false);
 
-        //Several possibilities:
-        //Enable UI canvas to select new tool that can be navigated with the touchpad (prefered option)
-        //Spawn 3d object containing a representation of all tools, which is destoryed when one is selected by grabbing (would be cool, but unnecissary)
-
-        //In either case, some object is enabled which has a reference to all the available tool prefabs
-
-        selectionCanvas.enabled = true;
+        //Open selection canvas
+        selectionCanvas.gameObject.SetActive(true);
 
         //Populate canvas with a mneu item for eash tool
     }
 
-    public void CloseToolboxMenu()
+    private void CloseToolboxMenu()
     {
         //Reeanble active tool
+        activeTool.gameObject.SetActive(true);
 
         //Disable canvas
-        selectionCanvas.enabled = false;
+        selectionCanvas.gameObject.SetActive(false);
     }
+
+    private void SelectHighlighted()
+    {
+        //Set highlighted item from list as activetool
+    }
+
+    #endregion
+
+    #region Tool Options Menu
+
+    private void ToggleToolOptions()
+    {
+
+    }
+
+    private void OpenToolOptions()
+    {
+        activeToolOptions = activeTool.toolOptions;
+
+    }
+
+    private void CloseToolOptions()
+    {
+
+    }
+
+    #endregion
 }
