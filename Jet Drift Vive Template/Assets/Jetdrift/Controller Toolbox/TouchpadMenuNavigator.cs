@@ -72,10 +72,11 @@ public class TouchpadMenuNavigator : MonoBehaviour {
 
     private void ScrollToActive()
     {
-        RectTransform currentTransform = currentSelected.GetComponent<RectTransform>();
-        RectTransform content = scrollRect.content;
-        if (currentTransform != null)
+        if (currentSelected != null)
         {
+            RectTransform currentTransform = currentSelected.GetComponent<RectTransform>();
+            RectTransform content = scrollRect.content;
+
             if (Mathf.Abs(currentTransform.anchoredPosition.y) < Mathf.Abs(content.offsetMax.y) || Mathf.Abs(currentTransform.anchoredPosition.y) > Mathf.Abs(content.rect.height + content.offsetMin.y))
             {
                 Vector2 normalizedPosition = new Vector2(currentTransform.anchoredPosition.x / content.rect.width, currentTransform.anchoredPosition.y / content.rect.height);
