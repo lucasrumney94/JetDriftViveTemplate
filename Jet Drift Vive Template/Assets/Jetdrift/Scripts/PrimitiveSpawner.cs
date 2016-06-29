@@ -18,6 +18,8 @@ public class PrimitiveSpawner : VRTool
 
     void OnEnable()
     {
+        StartCoroutine("RepeatSpawner");
+
         vrInput = transform.GetComponentInParent<ControllerInputTracker>();
 
         vrInput.triggerPressedDown += new ControllerInputDelegate(SpawnCurrentPrimitive);
@@ -29,6 +31,7 @@ public class PrimitiveSpawner : VRTool
 
     void OnDisable()
     {
+        StopCoroutine("RepeatSpawner");
         vrInput.triggerPressedDown -= new ControllerInputDelegate(SpawnCurrentPrimitive); //Remove tool controls from event list when disabled
     }
 
@@ -40,11 +43,13 @@ public class PrimitiveSpawner : VRTool
         toolOptions[2] = new Option(ref RepeatSpawn);
     }
 
-    void Update()
+
+    public IEnumerator RepeatSpawner()
     {
-        if (RepeatSpawn && vrInput.triggerStrength == 1.0f && (Time.time%1.0==0))
+        if (RepeatSpawn && vrInput.triggerStrength == 1.0f)
         {
             SpawnCurrentPrimitive();
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -56,7 +61,7 @@ public class PrimitiveSpawner : VRTool
             temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f); 
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
 
         }
         else if (currentPrimitive == 1)
@@ -65,7 +70,7 @@ public class PrimitiveSpawner : VRTool
             temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
         else if (currentPrimitive == 2)
         {
@@ -73,7 +78,7 @@ public class PrimitiveSpawner : VRTool
             temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
         else if (currentPrimitive == 3)
         {
@@ -82,7 +87,7 @@ public class PrimitiveSpawner : VRTool
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<BoxCollider>();
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
         else if (currentPrimitive == 4)
         {
@@ -91,7 +96,7 @@ public class PrimitiveSpawner : VRTool
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<BoxCollider>();
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
         else if (currentPrimitive == 5)
         {
@@ -99,15 +104,15 @@ public class PrimitiveSpawner : VRTool
             temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 1.0f;
-            temp.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
         else if (currentPrimitive >= 6)
         {
             GameObject newCustomPrimitive = Instantiate(customPrimitives[currentPrimitive - 6], vrInput.position, vrInput.rotation) as GameObject;
-            newCustomPrimitive.transform.position += newCustomPrimitive.transform.forward * customPrimitiveScales[currentPrimitive-6] * 1.2f;
+            newCustomPrimitive.transform.position += newCustomPrimitive.transform.forward * customPrimitiveScales[currentPrimitive-6]/2;
             newCustomPrimitive.transform.localScale *= customPrimitiveScales[currentPrimitive - 6];
             newCustomPrimitive.AddComponent<Rigidbody>().drag = 1.0f;
-            newCustomPrimitive.GetComponent<Rigidbody>().AddForce(initialForce * vrInput.transform.forward);
+            newCustomPrimitive.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
 
 
