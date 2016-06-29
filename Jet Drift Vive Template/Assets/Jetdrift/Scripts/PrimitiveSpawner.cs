@@ -48,6 +48,8 @@ public class PrimitiveSpawner : VRTool
     {
         for (;;)
         {
+            Debug.Log("HEY");
+            Debug.Log("RepeatSpawn is " + RepeatSpawn.ToString() + "   triggerPressed is" + vrInput.triggerPressed.ToString());
             if (RepeatSpawn && vrInput.triggerPressed)
             {
                 SpawnCurrentPrimitive();
@@ -88,7 +90,7 @@ public class PrimitiveSpawner : VRTool
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Plane);
             temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
-            temp.transform.localScale *= primitiveScale;
+            temp.transform.localScale *= primitiveScale/10;
             temp.AddComponent<BoxCollider>();
             temp.AddComponent<Rigidbody>().drag = 0.0f;
             temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
