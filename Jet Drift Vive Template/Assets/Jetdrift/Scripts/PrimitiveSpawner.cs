@@ -10,11 +10,13 @@ public class PrimitiveSpawner : VRTool
     public List<GameObject> customPrimitives;
     public List<float> customPrimitiveScales;
 
-    public float initialForce;
-    public float primitiveScale = 1f;
-    public bool RepeatSpawn;
+    public float initialForce = 3.0f;
+    public float primitiveScale = 0.3f;
+    public bool RepeatSpawn = true;
 
     public int currentPrimitive;
+
+    private GameObject previewPrimitive;
 
     void OnEnable()
     {
@@ -27,6 +29,11 @@ public class PrimitiveSpawner : VRTool
         vrInput.touchpadPressedDown += new ControllerInputDelegate(NextPrimitive);
 
         InitializeOptions();
+
+        previewPrimitive = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        previewPrimitive.transform.localScale = 0.01f*Vector3.one;
+        previewPrimitive.transform.parent = this.gameObject.transform;
+        previewPrimitive.transform.localPosition = new Vector3(0.0f, 0.05f, 0.05f);
     }
 
     void OnDisable()
@@ -128,6 +135,12 @@ public class PrimitiveSpawner : VRTool
         if (currentPrimitive > 5 + customPrimitives.Count) //5 because 5 basic prims
         {
             currentPrimitive = 0;
+
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
+        }
+        else
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Capsule).GetComponent<MeshFilter>().mesh;
         }
     }
 
