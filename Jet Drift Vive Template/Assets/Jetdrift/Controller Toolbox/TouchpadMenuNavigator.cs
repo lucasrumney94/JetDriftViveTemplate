@@ -12,6 +12,8 @@ public class TouchpadMenuNavigator : MonoBehaviour {
 
     private ControllerInputTracker inputTracker;
 
+    private RectTransform[] content;
+
     void OnEnable()
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
@@ -28,6 +30,17 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         inputTracker.triggerPressedDown -= new ControllerInputDelegate(MenuSelect);
     }
 
+    void Start()
+    {
+        content = transform.GetComponentsInChildren<RectTransform>();
+    }
+
+    void Update()
+    {
+        currentSelected = eventSystem.currentSelectedGameObject;
+        ScrollToActive();
+    }
+
     private void NavigateMenuUp()
     {
         eventSystem.SetSelectedGameObject(currentSelected);
@@ -35,6 +48,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Up;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        ScrollToActive();
     }
 
     private void NavigateMenuDown()
@@ -44,6 +58,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Down;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        ScrollToActive();
     }
 
     private void MenuSelect()
@@ -53,5 +68,19 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         currentSelected = eventSystem.currentSelectedGameObject;
         baseData.selectedObject = currentSelected;
         ExecuteEvents.Execute(currentSelected, baseData, ExecuteEvents.submitHandler);
+    }
+
+    private void ScrollToActive()
+    {
+        RectTransform currentTransform = currentSelected.GetComponent<RectTransform>();
+        RectTransform content = scrollRect.content;
+        if (currentTransform != null)
+        {
+            if (Mathf.Abs(currentTransform.anchoredPosition.y) < Mathf.Abs(content.offsetMax.y) || Mathf.Abs(currentTransform.anchoredPosition.y) > Mathf.Abs(content.rect.height + content.offsetMin.y))
+            {
+                Vector2 normalizedPosition = new Vector2(currentTransform.anchoredPosition.x / content.rect.width, currentTransform.anchoredPosition.y / content.rect.height);
+                scrollRect.verticalNormalizedPosition = 1f - Mathf.Abs(normalizedPosition.y);
+            }
+        }
     }
 }
