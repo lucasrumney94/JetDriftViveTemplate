@@ -895,64 +895,7 @@ Transform:
   m_Father: {fileID: 322769167}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &251843971
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 133080, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 251843972}
-  m_Layer: 0
-  m_Name: attach
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &251843972
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 411758, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 251843971}
-  m_LocalRotation: {x: -0.73805505, y: -0, z: 0.000000029802326, w: 0.6747405}
-  m_LocalPosition: {x: 0.000000011444088, y: 0.003, z: -0.09599997}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 587530855}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &262074556
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 126158, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 262074557}
-  m_Layer: 0
-  m_Name: trackpad
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &262074557
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400680, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 262074556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -6.9849193e-10, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 902323210}
-  m_Father: {fileID: 322769167}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &295839529
+--- !u!43 &246906515
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1080,6 +1023,63 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &251843971
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 133080, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 251843972}
+  m_Layer: 0
+  m_Name: attach
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &251843972
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 411758, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 251843971}
+  m_LocalRotation: {x: -0.73805505, y: -0, z: 0.000000029802326, w: 0.6747405}
+  m_LocalPosition: {x: 0.000000011444088, y: 0.003, z: -0.09599997}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 587530855}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &262074556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 126158, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 262074557}
+  m_Layer: 0
+  m_Name: trackpad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &262074557
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400680, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 262074556}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -6.9849193e-10, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 902323210}
+  m_Father: {fileID: 322769167}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &322769166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1196,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 330108625}
-  m_Mesh: {fileID: 295839529}
+  m_Mesh: {fileID: 246906515}
 --- !u!23 &330108628
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3723,7 +3723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customPrimitives: []
   customPrimitiveScales: []
-  initialForce: 0
+  initialForce: 1
   primitiveScale: 0.2
   RepeatSpawn: 1
   currentPrimitive: 0
