@@ -152,7 +152,7 @@ public class PrimitiveSpawner : VRTool
         }
         else if (currentPrimitive == 3)
         {
-            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Plane).GetComponent<MeshFilter>().mesh;
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Quad).GetComponent<MeshFilter>().mesh;
         }
         else if (currentPrimitive == 4)
         {
