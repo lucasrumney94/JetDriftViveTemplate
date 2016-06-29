@@ -164,7 +164,7 @@ public class PrimitiveSpawner : VRTool
         }
         else if (currentPrimitive >= 6) //6 because 5 basic prims
         {
-            previewPrimitive.GetComponent<MeshFilter>().mesh = customPrimitives[currentPrimitive - 6].GetComponent<MeshFilter>().mesh;
+            previewPrimitive.GetComponent<MeshFilter>().mesh = customPrimitives[currentPrimitive - 6].GetComponent<MeshFilter>().sharedMesh;
         }
 
     }
