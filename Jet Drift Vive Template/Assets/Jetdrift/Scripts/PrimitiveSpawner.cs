@@ -162,9 +162,15 @@ public class PrimitiveSpawner : VRTool
         {
             previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
         }
-        else if (currentPrimitive >= 6) //6 because 5 basic prims
+
+        if (currentPrimitive >= 6) //6 because 5 basic prims
         {
             previewPrimitive.GetComponent<MeshFilter>().mesh = customPrimitives[currentPrimitive - 6].GetComponent<MeshFilter>().sharedMesh;
+            previewPrimitive.GetComponent<Material>().shader = customPrimitives[currentPrimitive - 6].GetComponent<Material>().shader;
+        }
+        else
+        {
+            previewPrimitive.GetComponent<Material>().shader = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<Material>().shader;
         }
 
     }
