@@ -48,11 +48,12 @@ public class PrimitiveSpawner : VRTool
     {
         for (;;)
         {
-            if (RepeatSpawn && vrInput.triggerStrength == 1.0f)
+            if (RepeatSpawn && vrInput.triggerPressed)
             {
                 SpawnCurrentPrimitive();
-                yield return new WaitForSeconds(1.0f);
             }
+
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -112,7 +113,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive >= 6)
         {
             GameObject newCustomPrimitive = Instantiate(customPrimitives[currentPrimitive - 6], vrInput.position, vrInput.rotation) as GameObject;
-            newCustomPrimitive.transform.position = vrInput.transform.position + vrInput.transform.forward * (customPrimitiveScales[currentPrimitive - 6]/2);
+            newCustomPrimitive.transform.position = vrInput.transform.position + vrInput.transform.forward * (customPrimitiveScales[currentPrimitive - 6]/5);
             newCustomPrimitive.transform.localScale *= customPrimitiveScales[currentPrimitive - 6];
             newCustomPrimitive.AddComponent<Rigidbody>().drag = 0.0f;
             newCustomPrimitive.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
