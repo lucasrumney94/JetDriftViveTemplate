@@ -923,7 +923,36 @@ Transform:
   m_Father: {fileID: 587530855}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &259168302
+--- !u!1 &262074556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 126158, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 262074557}
+  m_Layer: 0
+  m_Name: trackpad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &262074557
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400680, guid: ef118035cf54c904484caaf63547fde0, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 262074556}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -6.9849193e-10, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 902323210}
+  m_Father: {fileID: 322769167}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &295839529
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1051,35 +1080,6 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
---- !u!1 &262074556
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 126158, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 262074557}
-  m_Layer: 0
-  m_Name: trackpad
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &262074557
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400680, guid: ef118035cf54c904484caaf63547fde0, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 262074556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -6.9849193e-10, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 902323210}
-  m_Father: {fileID: 322769167}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &322769166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1196,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 330108625}
-  m_Mesh: {fileID: 259168302}
+  m_Mesh: {fileID: 295839529}
 --- !u!23 &330108628
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3399,8 +3399,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebde41d1d7ca514c9ad2ce3f894184b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceIndex: 0
-  debugCanvas: {fileID: 1083848893}
 --- !u!225 &1290377099
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3688,7 +3686,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000011475212396, guid: 9cb125a02acf6c641ae61def5017b460, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1000011475212396, guid: 9cb125a02acf6c641ae61def5017b460, type: 2}
       propertyPath: m_Name
@@ -3718,6 +3716,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c204d3a2e19296a4ebedc5d83b39836e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customPrimitives: []
+  customPrimitiveScales: []
+  initialForce: 0
+  primitiveScale: 1
+  RepeatSpawn: 0
+  currentPrimitive: 0
 --- !u!1 &1431482098
 GameObject:
   m_ObjectHideFlags: 0
@@ -5560,6 +5564,10 @@ Prefab:
         type: 2}
       propertyPath: m_Navigation.m_Mode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012748592504, guid: cd3d90cad7ccd194a9267a810e8d4af5, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cd3d90cad7ccd194a9267a810e8d4af5, type: 2}
