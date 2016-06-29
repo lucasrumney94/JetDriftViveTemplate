@@ -48,8 +48,6 @@ public class PrimitiveSpawner : VRTool
     {
         for (;;)
         {
-            Debug.Log("HEY");
-            Debug.Log("RepeatSpawn is " + RepeatSpawn.ToString() + "   triggerPressed is" + vrInput.triggerPressed.ToString());
             if (RepeatSpawn && vrInput.triggerPressed)
             {
                 SpawnCurrentPrimitive();
@@ -64,7 +62,7 @@ public class PrimitiveSpawner : VRTool
         if (currentPrimitive == 0)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f); 
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ; 
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 0.0f;
             temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
@@ -73,7 +71,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive == 1)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ;
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 0.0f;
             temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
@@ -81,7 +79,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive == 2)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ;
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 0.0f;
             temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
@@ -89,7 +87,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive == 3)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ;
             temp.transform.localScale *= primitiveScale/10;
             temp.AddComponent<BoxCollider>();
             temp.AddComponent<Rigidbody>().drag = 0.0f;
@@ -98,7 +96,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive == 4)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ;
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<BoxCollider>();
             temp.AddComponent<Rigidbody>().drag = 0.0f;
@@ -107,7 +105,7 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive == 5)
         {
             GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            temp.transform.position = vrInput.transform.position + vrInput.transform.forward * (primitiveScale * 1.2f);
+            temp.transform.position = vrInput.transform.position + vrInput.transform.forward ;
             temp.transform.localScale *= primitiveScale;
             temp.AddComponent<Rigidbody>().drag = 0.0f;
             temp.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
@@ -115,9 +113,9 @@ public class PrimitiveSpawner : VRTool
         else if (currentPrimitive >= 6)
         {
             GameObject newCustomPrimitive = Instantiate(customPrimitives[currentPrimitive - 6], vrInput.position, vrInput.rotation) as GameObject;
-            newCustomPrimitive.transform.position = vrInput.transform.position + vrInput.transform.forward * (customPrimitiveScales[currentPrimitive - 6]/5);
+            newCustomPrimitive.transform.position = vrInput.transform.position + vrInput.transform.forward;
             newCustomPrimitive.transform.localScale *= customPrimitiveScales[currentPrimitive - 6];
-            newCustomPrimitive.AddComponent<Rigidbody>().drag = 0.0f;
+            //newCustomPrimitive.AddComponent<Rigidbody>().drag = 0.0f;
             newCustomPrimitive.GetComponent<Rigidbody>().velocity = initialForce * vrInput.transform.forward;
         }
 
