@@ -4,25 +4,25 @@ using System.Collections;
 public class CubeSpawner : VRTool {
 
     private ControllerInputTracker vrInput;
-    public int deviceIndex;
 
     public GameObject cubePrefab;
 
     public float initialForce;
-    public float scale;
+    public float scale = 1f;
     public bool spawnEveryFrame;
-
-    void Start()
-    {
-        deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
-        vrInput = transform.GetComponentInParent<ControllerInputTracker>();
-
-        vrInput.triggerPressedDown += new ControllerInputDelegate(SpawnCube);
-    }
 
     void OnEnable()
     {
+        vrInput = transform.GetComponentInParent<ControllerInputTracker>();
+
+        vrInput.triggerPressedDown += new ControllerInputDelegate(SpawnCube);
+
         InitializeOptions();
+    }
+
+    void OnDisable()
+    {
+        vrInput.triggerPressedDown -= new ControllerInputDelegate(SpawnCube); //Remove tool controls from event list when disabled
     }
 
     public override void InitializeOptions()
@@ -35,7 +35,7 @@ public class CubeSpawner : VRTool {
 
     void Update()
     {
-        if (vrInput.triggerStrength == 1f)
+        if (spawnEveryFrame && vrInput.triggerStrength == 1f)
         {
             SpawnCube();
         }
@@ -45,6 +45,7 @@ public class CubeSpawner : VRTool {
     {
         GameObject newCube = Instantiate(cubePrefab, vrInput.position, vrInput.rotation) as GameObject;
         newCube.transform.position += newCube.transform.forward * 0.1f;
+        newCube.transform.localScale *= scale;
         newCube.GetComponent<Rigidbody>().velocity = newCube.transform.forward * initialForce;
     }
 }
