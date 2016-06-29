@@ -132,16 +132,40 @@ public class PrimitiveSpawner : VRTool
     public void NextPrimitive()
     {
         currentPrimitive++;
-        if (currentPrimitive > 5 + customPrimitives.Count) //5 because 5 basic prims
+
+        if (currentPrimitive > 5 + customPrimitives.Count)
         {
             currentPrimitive = 0;
-
-            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
         }
-        else
+
+        if (currentPrimitive == 0)
         {
             previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Capsule).GetComponent<MeshFilter>().mesh;
         }
-    }
+        else if (currentPrimitive == 1)
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Cube).GetComponent<MeshFilter>().mesh;
+        }
+        else if (currentPrimitive == 2)
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Cylinder).GetComponent<MeshFilter>().mesh;
+        }
+        else if (currentPrimitive == 3)
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Plane).GetComponent<MeshFilter>().mesh;
+        }
+        else if (currentPrimitive == 4)
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Quad).GetComponent<MeshFilter>().mesh;
+        }
+        else if (currentPrimitive == 5)
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshFilter>().mesh;
+        }
+        else if (currentPrimitive >= 6) //6 because 5 basic prims
+        {
+            previewPrimitive.GetComponent<MeshFilter>().mesh = customPrimitives[currentPrimitive - 6].GetComponent<MeshFilter>().mesh;
+        }
 
+    }
 }
