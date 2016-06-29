@@ -30,6 +30,8 @@ public class Toolbox : MonoBehaviour {
     private ControllerInputTracker inputTracker;
 
     public Canvas selectionCanvas;
+    public RectTransform selectionContent; //Assign to the 'content' child of the scroll rect
+    public Button selectionButtonPrefab;
     public Canvas toolOptionsCanvas;
 
     public VRTool[] toolPrefabs;
@@ -39,11 +41,18 @@ public class Toolbox : MonoBehaviour {
 
     private Option[] activeToolOptions;
 
-    void Start()
+    void OnEnable()
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
         inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
+
+        PopulateToolBoxMenu();
+    }
+
+    void OnDisable()
+    {
+        inputTracker.menuPressedDown -= new ControllerInputDelegate(StartListeningForLongPress);
     }
 
     void Update()
@@ -124,6 +133,26 @@ public class Toolbox : MonoBehaviour {
 
         //Disable canvas
         selectionCanvas.gameObject.SetActive(false);
+    }
+
+    public void PopulateToolBoxMenu()
+    {
+        foreach (VRTool tool in toolPrefabs)
+        {
+            Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
+            toolButton.transform.parent = selectionContent;
+            Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = tool.name;
+            }
+            else
+            {
+                Debug.Log("Button prefab did not have a UI Text as its first child!");
+            }
+            toolButton.onClick = new Button.ButtonClickedEvent();
+            toolButton.onClick.AddListener(tool.SetAsActiveTool);
+        }
     }
 
     #endregion

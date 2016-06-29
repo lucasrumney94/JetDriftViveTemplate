@@ -9,4 +9,9 @@ public class VRTool : MonoBehaviour {
     {
         throw new System.NotImplementedException("Tried to call InitializeOptions on the base class of VRTool! All descendants of VRTool should override this function.");
     }
+
+    public virtual void SetAsActiveTool()
+    {
+        Debug.Log(name + " was set as active tool!");
+    }
 }
