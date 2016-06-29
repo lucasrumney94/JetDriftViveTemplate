@@ -35,11 +35,11 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         content = transform.GetComponentsInChildren<RectTransform>();
     }
 
-    void Update()
-    {
-        currentSelected = eventSystem.currentSelectedGameObject;
-        ScrollToActive();
-    }
+    //void Update()
+    //{
+    //    currentSelected = eventSystem.currentSelectedGameObject;
+    //    ScrollToActive();
+    //}
 
     private void NavigateMenuUp()
     {
