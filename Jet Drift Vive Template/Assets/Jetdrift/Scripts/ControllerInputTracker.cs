@@ -343,7 +343,7 @@ public class ControllerInputTracker : MonoBehaviour {
         triggerStrengthDelta = triggerStrength - lastTriggerStrength;
 
         touchpadAxis = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad);
-        touchpadAxisDelta = touchpadAxis = lastTouchpadAxis;
+        touchpadAxisDelta = touchpadAxis - lastTouchpadAxis;
 
         touchpadAngle = GetTouchpadAngle(touchpadAxis);
         touchpadAngleDelta = touchpadAngle - lastTouchpadAngle;
