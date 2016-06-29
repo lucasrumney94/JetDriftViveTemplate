@@ -3692,6 +3692,11 @@ Prefab:
       propertyPath: m_Name
       value: PrimitiveSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012882888842, guid: 9cb125a02acf6c641ae61def5017b460,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9cb125a02acf6c641ae61def5017b460, type: 2}
   m_IsPrefabParent: 0
@@ -3719,8 +3724,8 @@ MonoBehaviour:
   customPrimitives: []
   customPrimitiveScales: []
   initialForce: 0
-  primitiveScale: 1
-  RepeatSpawn: 0
+  primitiveScale: 0.2
+  RepeatSpawn: 1
   currentPrimitive: 0
 --- !u!1 &1431482098
 GameObject:
