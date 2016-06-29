@@ -8,6 +8,8 @@ public class TouchpadMenuNavigator : MonoBehaviour {
     public GameObject currentSelected; //TODO: automatically assign currentSelected
     public EventSystem eventSystem; //TODO: automaticall assign eventSystem
 
+    public ScrollRect scrollRect; //Optional parameter to help navigate menus inside a scrollable area
+
     private ControllerInputTracker inputTracker;
 
     void OnEnable()
