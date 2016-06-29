@@ -10,13 +10,10 @@ public class TouchpadMenuNavigator : MonoBehaviour {
 
     private ControllerInputTracker inputTracker;
 
-    void Start()
-    {
-        inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
-    }
-
     void OnEnable()
     {
+        inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
+
         inputTracker.dpadUpTouchedStart += new ControllerInputDelegate(NavigateMenuUp);
         inputTracker.dpadDownTouchedStart += new ControllerInputDelegate(NavigateMenuDown);
         inputTracker.triggerPressedDown += new ControllerInputDelegate(MenuSelect);
