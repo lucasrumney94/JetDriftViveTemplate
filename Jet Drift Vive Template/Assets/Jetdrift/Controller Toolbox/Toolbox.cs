@@ -140,7 +140,7 @@ public class Toolbox : MonoBehaviour {
         foreach (VRTool tool in toolPrefabs)
         {
             Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
-            toolButton.transform.parent = selectionContent;
+            toolButton.transform.SetParent(selectionContent);
             Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
             if (buttonText != null)
             {
