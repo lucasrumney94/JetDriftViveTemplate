@@ -139,9 +139,13 @@ public class Toolbox : MonoBehaviour {
     {
         foreach (VRTool tool in toolPrefabs)
         {
+            VRTool newTool = Instantiate(tool).GetComponent<VRTool>();
+            newTool.gameObject.SetActive(false);
+
             Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
             toolButton.transform.SetParent(selectionContent);
             toolButton.transform.localScale = Vector3.one;
+            toolButton.transform.localPosition = Vector3.zero;
             Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
             if (buttonText != null)
             {
@@ -152,11 +156,18 @@ public class Toolbox : MonoBehaviour {
                 Debug.Log("Button prefab did not have a UI Text as its first child!");
             }
             toolButton.onClick = new Button.ButtonClickedEvent();
-            toolButton.onClick.AddListener(tool.SetAsActiveTool);
+            toolButton.onClick.AddListener(() => ChangeActiveTool(newTool));
             Navigation navigation = new Navigation();
             navigation.mode = Navigation.Mode.Vertical;
             toolButton.navigation = navigation;
         }
+    }
+
+    public void ChangeActiveTool(VRTool newTool)
+    {
+        CloseToolboxMenu();
+        newTool.gameObject.SetActive(true);
+        Debug.Log(newTool.name + " was set as active tool!");
     }
 
     #endregion
