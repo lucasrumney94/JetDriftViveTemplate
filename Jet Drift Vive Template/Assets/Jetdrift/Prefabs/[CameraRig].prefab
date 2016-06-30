@@ -3450,8 +3450,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b53723fd7b7aa4d8e203b0d6b75833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionCanvas: {fileID: 223000011285884770}
-  selectionContent: {fileID: 224000012942625548}
+  selectionCanvas: {fileID: 223000013528593042}
+  selectionContent: {fileID: 224000013617255810}
   selectionButtonPrefab: {fileID: 114000011843592568, guid: f2bf36a082d2e594abc788c2cf12d504,
     type: 2}
   toolOptionsCanvas: {fileID: 0}
@@ -4092,7 +4092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936290c9e6e132042b1d6d270edb6165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSelected: {fileID: 0}
+  currentSelected: {fileID: 1000011237179878}
   eventSystem: {fileID: 0}
   scrollRect: {fileID: 114000011016752276}
 --- !u!114 &114000012904341528
@@ -4160,7 +4160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936290c9e6e132042b1d6d270edb6165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSelected: {fileID: 0}
+  currentSelected: {fileID: 1000010764856406}
   eventSystem: {fileID: 0}
   scrollRect: {fileID: 114000011975662042}
 --- !u!114 &114000013327452872
