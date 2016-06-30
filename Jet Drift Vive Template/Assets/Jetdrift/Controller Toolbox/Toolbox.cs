@@ -152,6 +152,9 @@ public class Toolbox : MonoBehaviour {
             }
             toolButton.onClick = new Button.ButtonClickedEvent();
             toolButton.onClick.AddListener(tool.SetAsActiveTool);
+            Navigation navigation = new Navigation();
+            navigation.mode = Navigation.Mode.Vertical;
+            toolButton.navigation = navigation;
         }
     }
 
