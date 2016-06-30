@@ -6136,7 +6136,6 @@ GameObject:
   - 4: {fileID: 1394545319}
   - 20: {fileID: 1394545312}
   - 124: {fileID: 1394545318}
-  - 114: {fileID: 1394545315}
   - 114: {fileID: 1394545313}
   - 114: {fileID: 1394545314}
   m_Layer: 0
@@ -6220,30 +6219,6 @@ MonoBehaviour:
   _ears: {fileID: 222263894}
   wireframe: 0
   flip: {fileID: 0}
---- !u!114 &1394545315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114000010872151092, guid: ef118035cf54c904484caaf63547fde0,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1394545311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93c5acf727c4d5d43bc69e892a516630, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_valveShadowTextureWidth: 4096
-  m_valveShadowTextureHeight: 4096
-  m_indirectLightmapsOnly: 0
-  m_adaptiveQualityEnabled: 1
-  m_adaptiveQualityDebugVis: 0
-  m_MSAALevel: 8
-  m_minRenderTargetScale: 0.8
-  m_maxRenderTargetScale: 1.4
-  m_maxRenderTargetDimension: 4096
-  m_cullLightsInSceneEditor: 0
-  m_cullLightsFromEditorCamera: 0
-  m_hideAllValveMaterials: 0
 --- !u!124 &1394545318
 Behaviour:
   m_ObjectHideFlags: 0

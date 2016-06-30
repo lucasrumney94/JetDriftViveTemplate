@@ -45,14 +45,14 @@ public class Toolbox : MonoBehaviour {
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
-        inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
+        inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolboxMenu);
 
         PopulateToolBoxMenu();
     }
 
     void OnDisable()
     {
-        inputTracker.menuPressedDown -= new ControllerInputDelegate(StartListeningForLongPress);
+        inputTracker.menuPressedDown -= new ControllerInputDelegate(ToggleToolboxMenu);
     }
 
     void Update()
