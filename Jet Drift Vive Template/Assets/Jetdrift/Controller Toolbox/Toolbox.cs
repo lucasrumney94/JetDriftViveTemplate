@@ -140,6 +140,7 @@ public class Toolbox : MonoBehaviour {
         foreach (VRTool tool in toolPrefabs)
         {
             VRTool newTool = Instantiate(tool).GetComponent<VRTool>();
+            newTool.transform.SetParent(inputTracker != null ? inputTracker.transform : transform.parent);
             newTool.gameObject.SetActive(false);
 
             Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
