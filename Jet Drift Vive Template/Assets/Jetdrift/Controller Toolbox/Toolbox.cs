@@ -43,16 +43,16 @@ public class Toolbox : MonoBehaviour {
 
     void OnEnable()
     {
+        PopulateToolBoxMenu();
+
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
-        inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
-
-        PopulateToolBoxMenu();
+        inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolboxMenu);
     }
 
     void OnDisable()
     {
-        inputTracker.menuPressedDown -= new ControllerInputDelegate(StartListeningForLongPress);
+        inputTracker.menuPressedDown -= new ControllerInputDelegate(ToggleToolboxMenu);
     }
 
     void Update()
@@ -140,7 +140,8 @@ public class Toolbox : MonoBehaviour {
         foreach (VRTool tool in toolPrefabs)
         {
             Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
-            toolButton.transform.parent = selectionContent;
+            toolButton.transform.SetParent(selectionContent);
+            toolButton.transform.localScale = Vector3.one;
             Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
             if (buttonText != null)
             {
@@ -152,6 +153,9 @@ public class Toolbox : MonoBehaviour {
             }
             toolButton.onClick = new Button.ButtonClickedEvent();
             toolButton.onClick.AddListener(tool.SetAsActiveTool);
+            Navigation navigation = new Navigation();
+            navigation.mode = Navigation.Mode.Vertical;
+            toolButton.navigation = navigation;
         }
     }
 
