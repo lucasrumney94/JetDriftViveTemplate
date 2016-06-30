@@ -166,7 +166,7 @@ public class Toolbox : MonoBehaviour {
 
     public void ChangeActiveTool(VRTool newTool)
     {
-        activeTool = newTool;
+        activeTool = newTool; //is this actually updating?
         CloseToolboxMenu();
         Debug.Log(newTool.name + " was set as active tool!");
     }
