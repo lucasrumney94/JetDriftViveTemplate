@@ -165,8 +165,8 @@ public class Toolbox : MonoBehaviour {
 
     public void ChangeActiveTool(VRTool newTool)
     {
+        activeTool = newTool;
         CloseToolboxMenu();
-        newTool.gameObject.SetActive(true);
         Debug.Log(newTool.name + " was set as active tool!");
     }
 
