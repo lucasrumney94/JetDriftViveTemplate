@@ -43,8 +43,6 @@ public class Toolbox : MonoBehaviour {
 
     void OnEnable()
     {
-        PopulateToolBoxMenu();
-
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
         inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolboxMenu);
@@ -53,6 +51,11 @@ public class Toolbox : MonoBehaviour {
     void OnDisable()
     {
         inputTracker.menuPressedDown -= new ControllerInputDelegate(ToggleToolboxMenu);
+    }
+
+    void Start()
+    {
+        PopulateToolBoxMenu();
     }
 
     void Update()
