@@ -108,11 +108,11 @@ public class Toolbox : MonoBehaviour {
 
     public void ToggleToolboxMenu()
     {
-        if (selectionCanvas.enabled)
+        if (selectionCanvas.gameObject.activeInHierarchy)
         {
             CloseToolboxMenu();
         }
-        else if (selectionCanvas.enabled == false)
+        else if (selectionCanvas.gameObject.activeInHierarchy == false)
         {
             OpenToolboxMenu();
         }
