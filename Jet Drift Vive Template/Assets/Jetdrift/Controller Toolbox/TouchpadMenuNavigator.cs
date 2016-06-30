@@ -5,8 +5,8 @@ using System.Collections;
 
 public class TouchpadMenuNavigator : MonoBehaviour {
 
-    public GameObject currentSelected; //TODO: automatically assign currentSelected
-    public EventSystem eventSystem; //TODO: automaticall assign eventSystem
+    public GameObject currentSelected;
+    public EventSystem eventSystem; //TODO: automatically assign eventSystem
 
     public ScrollRect scrollRect; //Optional parameter to help navigate menus inside a scrollable area
 
@@ -35,11 +35,13 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         content = transform.GetComponentsInChildren<RectTransform>();
     }
 
-    //void Update()
-    //{
-    //    currentSelected = eventSystem.currentSelectedGameObject;
-    //    ScrollToActive();
-    //}
+    void Update()
+    {
+        if (currentSelected == null)
+        {
+            currentSelected = scrollRect.content.transform.GetChild(0).gameObject;
+        }
+    }
 
     private void NavigateMenuUp()
     {
