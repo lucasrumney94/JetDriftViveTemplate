@@ -121,7 +121,10 @@ public class Toolbox : MonoBehaviour {
     private void OpenToolboxMenu()
     {
         //Temporarily disable active tool
-        activeTool.gameObject.SetActive(false);
+        if (activeTool != null)
+        {
+            activeTool.gameObject.SetActive(false);
+        }
 
         //Open selection canvas
         selectionCanvas.gameObject.SetActive(true);
@@ -132,7 +135,10 @@ public class Toolbox : MonoBehaviour {
     private void CloseToolboxMenu()
     {
         //Reeanble active tool
-        activeTool.gameObject.SetActive(true);
+        if (activeTool != null)
+        {
+            activeTool.gameObject.SetActive(true);
+        }
 
         //Disable canvas
         selectionCanvas.gameObject.SetActive(false);

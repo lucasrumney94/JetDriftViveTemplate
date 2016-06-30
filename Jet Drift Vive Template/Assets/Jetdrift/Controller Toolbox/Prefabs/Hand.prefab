@@ -111,7 +111,7 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
-  tip: {fileID: 0}
+  handRigidbody: {fileID: 0}
   highlightedObject: {fileID: 0}
   heldObject: {fileID: 0}
 --- !u!135 &135000013866759706

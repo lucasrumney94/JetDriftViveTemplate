@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936290c9e6e132042b1d6d270edb6165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSelected: {fileID: 1000013678673288}
+  currentSelected: {fileID: 0}
   eventSystem: {fileID: 0}
   scrollRect: {fileID: 114000013767410940}
 --- !u!114 &114000013331039906

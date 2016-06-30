@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60343fad923ee14189f2a79befac3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceIndex: 0
   cubePrefab: {fileID: 137004, guid: d04a99305afb49541ae278371bc6cf21, type: 2}
   initialForce: 2
+  scale: 1
+  spawnEveryFrame: 0
