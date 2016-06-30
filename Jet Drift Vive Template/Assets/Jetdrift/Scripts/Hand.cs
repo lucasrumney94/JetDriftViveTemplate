@@ -11,7 +11,7 @@ public class Hand : VRTool {
 
     public LayerMask collisionMask;
 
-    public Rigidbody tip;
+    public Rigidbody handRigidbody;
     public GameObject highlightedObject;
     public GameObject heldObject;
 
@@ -21,7 +21,7 @@ public class Hand : VRTool {
     {
         deviceIndex = GetComponentInParent<ControllerInputTracker>().index;
         vrInput = transform.GetComponentInParent<ControllerInputTracker>();
-        transform.position = tip.transform.position;
+        handRigidbody = GetComponent<Rigidbody>();
 
         vrInput.triggerPressedDown += new ControllerInputDelegate(TryPickup);
         vrInput.triggerPressedUp += new ControllerInputDelegate(DeactivateHeld);
@@ -72,7 +72,7 @@ public class Hand : VRTool {
     {
         picked.SendMessage("Pickup", deviceIndex, SendMessageOptions.DontRequireReceiver);
         joint = picked.AddComponent<FixedJoint>();
-        joint.connectedBody = tip;
+        joint.connectedBody = handRigidbody;
         heldObject = picked;
     }
 
