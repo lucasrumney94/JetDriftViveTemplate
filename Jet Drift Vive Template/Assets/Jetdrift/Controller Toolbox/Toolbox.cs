@@ -43,11 +43,11 @@ public class Toolbox : MonoBehaviour {
 
     void OnEnable()
     {
+        PopulateToolBoxMenu();
+
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
         inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolboxMenu);
-
-        PopulateToolBoxMenu();
     }
 
     void OnDisable()
@@ -141,6 +141,7 @@ public class Toolbox : MonoBehaviour {
         {
             Button toolButton = Instantiate(selectionButtonPrefab).GetComponent<Button>();
             toolButton.transform.SetParent(selectionContent);
+            toolButton.transform.localScale = Vector3.one;
             Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
             if (buttonText != null)
             {
