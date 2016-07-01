@@ -42,7 +42,6 @@ public class Toolbox : MonoBehaviour {
     public Button selectionButtonPrefab;
     public Toggle toggleOptionPrefab;
     public Slider sliderOptionPrefab;
-    public Canvas toolOptionsCanvas;
 
     public VRTool[] toolPrefabs;
 
@@ -81,6 +80,7 @@ public class Toolbox : MonoBehaviour {
     private void StartListeningForLongPress()
     {
         listeningForLongPress = true;
+        timeOfLastMenuDown = Time.time;
     }
 
     private void StopListeningForLongPress()
@@ -138,8 +138,6 @@ public class Toolbox : MonoBehaviour {
 
         //Open selection canvas
         selectionCanvas.gameObject.SetActive(true);
-
-        //Populate canvas with a mneu item for eash tool
     }
 
     private void CloseToolboxMenu()
@@ -185,7 +183,7 @@ public class Toolbox : MonoBehaviour {
 
     public void ChangeActiveTool(VRTool newTool)
     {
-        activeTool = newTool; //is this actually updating?
+        activeTool = newTool;
         CloseToolboxMenu();
         Debug.Log(newTool.name + " was set as active tool!");
     }
@@ -222,37 +220,7 @@ public class Toolbox : MonoBehaviour {
             }
 
             //Spawn new Toggle or Slider for each option
-            foreach (Option toolOption in activeToolOptions)
-            {
-                GameObject newOptionUIElement;
-                if (toolOption.type == typeof(bool))
-                {
-                    newOptionUIElement = Instantiate(toggleOptionPrefab.gameObject);
-                }
-                else if (toolOption.type == typeof(float))
-                {
-                    newOptionUIElement = Instantiate(sliderOptionPrefab.gameObject);
-                }
-                else
-                {
-                    Debug.Log("Tool option not set to valid type!");
-                    return;
-                }
-
-                newOptionUIElement.transform.SetParent(inputTracker.transform);
-                newOptionUIElement.transform.localScale = Vector3.one;
-                newOptionUIElement.transform.localPosition = Vector3.zero;
-
-                Text optionText = newOptionUIElement.transform.GetComponentInChildren<Text>();
-                if (optionText != null)
-                {
-                    optionText.text = "";
-                }
-                else
-                {
-                    Debug.Log("Option prefab did not have a UI Text as a child!");
-                }
-            }
+            PopulateToolOptionsMenu();
 
             activeTool.gameObject.SetActive(false);
         }
@@ -269,6 +237,57 @@ public class Toolbox : MonoBehaviour {
         }
 
         optionsCanvas.gameObject.SetActive(false);
+    }
+
+    private void PopulateToolOptionsMenu()
+    {
+        foreach (Option toolOption in activeToolOptions)
+        {
+            GameObject newOptionUIElement;
+            if (toolOption.type == typeof(bool))
+            {
+                newOptionUIElement = Instantiate(toggleOptionPrefab.gameObject);
+            }
+            else if (toolOption.type == typeof(float))
+            {
+                newOptionUIElement = Instantiate(sliderOptionPrefab.gameObject);
+            }
+            else
+            {
+                Debug.Log("Tool option not set to valid type!");
+                return;
+            }
+
+            newOptionUIElement.transform.SetParent(optionsContent.transform);
+            newOptionUIElement.transform.localScale = Vector3.one;
+            newOptionUIElement.transform.localPosition = Vector3.zero;
+
+            Text optionText = newOptionUIElement.transform.GetComponentInChildren<Text>();
+            if (optionText != null)
+            {
+                optionText.text = toolOption.name;
+            }
+            else
+            {
+                Debug.Log("Option prefab did not have a UI Text as a child!");
+            }
+
+            Navigation navigation = new Navigation();
+            navigation.mode = Navigation.Mode.Vertical;
+
+            Toggle optionToggle = newOptionUIElement.GetComponent<Toggle>();
+            Slider optionSlider = newOptionUIElement.GetComponent<Slider>();
+
+            if (optionToggle != null)
+            {
+                optionToggle.navigation = navigation;
+            }
+            else if (optionSlider != null)
+            {
+                optionSlider.navigation = navigation;
+            }
+
+        }
     }
 
     #endregion
