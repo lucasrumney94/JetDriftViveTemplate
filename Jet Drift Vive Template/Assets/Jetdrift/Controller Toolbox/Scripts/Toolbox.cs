@@ -85,6 +85,8 @@ public class Toolbox : MonoBehaviour {
     public Canvas optionsCanvas;
     public RectTransform optionsContent;
 
+    private GameObject[] optionsUIElements;
+
     public Button selectionButtonPrefab;
     public Toggle toggleOptionPrefab;
     public Slider sliderOptionPrefab;
@@ -117,6 +119,7 @@ public class Toolbox : MonoBehaviour {
     void Update()
     {
         ListenForLongPress();
+        UpdateOptionsUI();
     }
 
     #region Press length detection
@@ -289,6 +292,7 @@ public class Toolbox : MonoBehaviour {
 
     private void PopulateToolOptionsMenu()
     {
+        optionsUIElements = new GameObject[activeToolOptions.Length];
         for (int i = 0; i < activeToolOptions.Length; i++)
         {
             GameObject newOptionUIElement;
@@ -305,6 +309,8 @@ public class Toolbox : MonoBehaviour {
                 Debug.Log("Tool option not set to valid type!");
                 return;
             }
+
+            optionsUIElements[i] = newOptionUIElement;
 
             newOptionUIElement.transform.SetParent(optionsContent.transform);
             newOptionUIElement.transform.localScale = Vector3.one;
@@ -345,7 +351,29 @@ public class Toolbox : MonoBehaviour {
 
                 optionSlider.onValueChanged.AddListener((value) => { SetFloatOption(currentIndex, value); });
             }
+        }
+    }
 
+    private void UpdateOptionsUI()
+    {
+        if (optionsUIElements != null)
+        {
+            for (int i = 0; i < optionsUIElements.Length; i++)
+            {
+                Toggle optionToggle = optionsUIElements[i].GetComponent<Toggle>();
+                Slider optionSlider = optionsUIElements[i].GetComponent<Slider>();
+
+                if (optionToggle != null)
+                {
+                    optionToggle.isOn = activeToolOptions[i].boolValue;
+                }
+                else if (optionSlider != null)
+                {
+                    optionSlider.minValue = activeToolOptions[i].minValue;
+                    optionSlider.maxValue = activeToolOptions[i].maxValue;
+                    optionSlider.value = activeToolOptions[i].floatValue;
+                }
+            }
         }
     }
 
