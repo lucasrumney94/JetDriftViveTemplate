@@ -43,7 +43,24 @@ public class TouchpadMenuNavigator : MonoBehaviour {
     {
         if (currentSelected == null)
         {
+            ResetSelected();
+        }
+    }
+
+    private void ResetSelected()
+    {
+        if (scrollRect.content.transform.childCount > 0)
+        {
             currentSelected = scrollRect.content.transform.GetChild(0).gameObject;
+            eventSystem.SetSelectedGameObject(currentSelected);
+        }
+    }
+
+    private void CheckForSelectedOutOfBounds() //Temporary solution to keep selection from accidentally switching canvas
+    {
+        if (currentSelected.transform.parent != scrollRect.content.transform)
+        {
+            ResetSelected();
         }
     }
 
@@ -54,6 +71,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Up;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        CheckForSelectedOutOfBounds();
         ScrollToActive();
     }
 
@@ -64,6 +82,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Down;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        CheckForSelectedOutOfBounds();
         ScrollToActive();
     }
 
@@ -74,6 +93,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Right;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        CheckForSelectedOutOfBounds();
         ScrollToActive();
     }
 
@@ -84,6 +104,7 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         axisData.moveDir = MoveDirection.Left;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
+        CheckForSelectedOutOfBounds();
         ScrollToActive();
     }
 

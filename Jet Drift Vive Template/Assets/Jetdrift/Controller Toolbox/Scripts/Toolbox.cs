@@ -248,14 +248,14 @@ public class Toolbox : MonoBehaviour {
 
     private void PopulateToolOptionsMenu()
     {
-        foreach (Option toolOption in activeToolOptions)
+        for (int i = 0; i < activeToolOptions.Length; i++)
         {
             GameObject newOptionUIElement;
-            if (toolOption.type == typeof(bool))
+            if (activeToolOptions[i].type == typeof(bool))
             {
                 newOptionUIElement = Instantiate(toggleOptionPrefab.gameObject);
             }
-            else if (toolOption.type == typeof(float))
+            else if (activeToolOptions[i].type == typeof(float))
             {
                 newOptionUIElement = Instantiate(sliderOptionPrefab.gameObject);
             }
@@ -273,7 +273,7 @@ public class Toolbox : MonoBehaviour {
             Text optionText = newOptionUIElement.transform.GetComponentInChildren<Text>();
             if (optionText != null)
             {
-                optionText.text = toolOption.name;
+                optionText.text = activeToolOptions[i].name;
             }
             else
             {
@@ -288,18 +288,33 @@ public class Toolbox : MonoBehaviour {
 
             if (optionToggle != null)
             {
-                optionToggle.isOn = toolOption.boolValue;
+                optionToggle.isOn = activeToolOptions[i].boolValue;
                 optionToggle.navigation = navigation;
+
+                optionToggle.onValueChanged.AddListener((value) => { SetBoolOption(i, value); });
             }
             else if (optionSlider != null)
             {
-                optionSlider.minValue = toolOption.minValue;
-                optionSlider.maxValue = toolOption.maxValue;
-                optionSlider.value = toolOption.floatValue;
+                optionSlider.minValue = activeToolOptions[i].minValue;
+                optionSlider.maxValue = activeToolOptions[i].maxValue;
+                optionSlider.value = activeToolOptions[i].floatValue;
                 optionSlider.navigation = navigation;
+
+                optionSlider.onValueChanged.AddListener((value) => { SetFloatOption(i, value); });
             }
 
         }
+    }
+
+    public void SetFloatOption(int optionIndex, float newValue)
+    {
+        activeToolOptions[optionIndex].floatValue = newValue;
+    }
+
+    public void SetBoolOption(int optionIndex, bool newValue)
+    {
+        activeToolOptions[optionIndex].boolValue = newValue;
+        Debug.Log("Set option #" + optionIndex + " to " + newValue);
     }
 
     #endregion
