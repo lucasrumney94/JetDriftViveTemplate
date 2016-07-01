@@ -37,7 +37,7 @@ public class Hand : VRTool {
     public override void InitializeOptions()
     {
         toolOptions = new Option[1];
-        toolOptions[0] = new Option(ref forceMultiplier);
+        toolOptions[0] = new Option(ref forceMultiplier, "Throw strength");
     }
 
     public void TryPickup()

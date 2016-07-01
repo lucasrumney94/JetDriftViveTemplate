@@ -7,19 +7,23 @@ public struct Option
 {
     public Type type;
 
+    public string name;
+
     public bool boolValue;
     public float floatValue;
 
-    public Option(ref float newFloat)
+    public Option(ref float newFloat, string optionName)
     {
         type = typeof(float);
+        name = optionName;
         boolValue = false;
         floatValue = newFloat;
     }
 
-    public Option(ref bool newBool)
+    public Option(ref bool newBool, string optionName)
     {
         type = typeof(bool);
+        name = optionName;
         boolValue = newBool;
         floatValue = 0f;
     }
@@ -31,7 +35,13 @@ public class Toolbox : MonoBehaviour {
 
     public Canvas selectionCanvas;
     public RectTransform selectionContent; //Assign to the 'content' child of the scroll rect
+
+    public Canvas optionsCanvas;
+    public RectTransform optionsContent;
+
     public Button selectionButtonPrefab;
+    public Toggle toggleOptionPrefab;
+    public Slider sliderOptionPrefab;
     public Canvas toolOptionsCanvas;
 
     public VRTool[] toolPrefabs;
@@ -45,12 +55,12 @@ public class Toolbox : MonoBehaviour {
     {
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
-        inputTracker.menuPressedDown += new ControllerInputDelegate(ToggleToolboxMenu);
+        inputTracker.menuPressedDown += new ControllerInputDelegate(StartListeningForLongPress);
     }
 
     void OnDisable()
     {
-        inputTracker.menuPressedDown -= new ControllerInputDelegate(ToggleToolboxMenu);
+        inputTracker.menuPressedDown -= new ControllerInputDelegate(StartListeningForLongPress);
     }
 
     void Start()
@@ -186,18 +196,79 @@ public class Toolbox : MonoBehaviour {
 
     private void ToggleToolOptions()
     {
-
+        if (optionsCanvas.gameObject.activeInHierarchy)
+        {
+            CloseToolOptions();
+        }
+        else if (optionsCanvas.gameObject.activeInHierarchy == false)
+        {
+            OpenToolOptions();
+        }
     }
 
     private void OpenToolOptions()
     {
-        activeToolOptions = activeTool.toolOptions;
+        //Temporarily disable active tool
+        if (activeTool != null)
+        {
+            activeToolOptions = activeTool.toolOptions;
 
+            //Remove all children of content
+            Transform contentTransform = optionsContent.transform;
+            int childCount = contentTransform.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                Destroy(contentTransform.GetChild(i).gameObject);
+            }
+
+            //Spawn new Toggle or Slider for each option
+            foreach (Option toolOption in activeToolOptions)
+            {
+                GameObject newOptionUIElement;
+                if (toolOption.type == typeof(bool))
+                {
+                    newOptionUIElement = Instantiate(toggleOptionPrefab.gameObject);
+                }
+                else if (toolOption.type == typeof(float))
+                {
+                    newOptionUIElement = Instantiate(sliderOptionPrefab.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Tool option not set to valid type!");
+                    return;
+                }
+
+                newOptionUIElement.transform.SetParent(inputTracker.transform);
+                newOptionUIElement.transform.localScale = Vector3.one;
+                newOptionUIElement.transform.localPosition = Vector3.zero;
+
+                Text optionText = newOptionUIElement.transform.GetComponentInChildren<Text>();
+                if (optionText != null)
+                {
+                    optionText.text = "";
+                }
+                else
+                {
+                    Debug.Log("Option prefab did not have a UI Text as a child!");
+                }
+            }
+
+            activeTool.gameObject.SetActive(false);
+        }
+
+        optionsCanvas.gameObject.SetActive(true);
     }
 
     private void CloseToolOptions()
     {
+        //Reeanble active tool
+        if (activeTool != null)
+        {
+            activeTool.gameObject.SetActive(true);
+        }
 
+        optionsCanvas.gameObject.SetActive(false);
     }
 
     #endregion
