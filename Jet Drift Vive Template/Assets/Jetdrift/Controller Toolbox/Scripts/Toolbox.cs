@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+[Serializable]
 public struct Option
 {
     public Type type;
@@ -51,10 +52,9 @@ public class Toolbox : MonoBehaviour {
 
     public VRTool[] toolPrefabs;
 
-    private VRTool activeTool;
-    private VRTool[] toolInstances; //When a tool is spawned cache a reference to it, and activate/deactivate that instance instead of creating and destroying instances
+    public VRTool activeTool;
 
-    private Option[] activeToolOptions;
+    public Option[] activeToolOptions;
 
     void OnEnable()
     {
@@ -71,6 +71,8 @@ public class Toolbox : MonoBehaviour {
     void Start()
     {
         PopulateToolBoxMenu();
+
+        OpenToolOptions(); //Here for testing remove once done
     }
 
     void Update()
@@ -286,12 +288,14 @@ public class Toolbox : MonoBehaviour {
             Toggle optionToggle = newOptionUIElement.GetComponent<Toggle>();
             Slider optionSlider = newOptionUIElement.GetComponent<Slider>();
 
+            int currentIndex = i; //Necessary for some reason to do with delegates / lambda
+
             if (optionToggle != null)
             {
                 optionToggle.isOn = activeToolOptions[i].boolValue;
                 optionToggle.navigation = navigation;
 
-                optionToggle.onValueChanged.AddListener((value) => { SetBoolOption(i, value); });
+                optionToggle.onValueChanged.AddListener((value) => { SetBoolOption(currentIndex, value); });
             }
             else if (optionSlider != null)
             {
@@ -300,7 +304,7 @@ public class Toolbox : MonoBehaviour {
                 optionSlider.value = activeToolOptions[i].floatValue;
                 optionSlider.navigation = navigation;
 
-                optionSlider.onValueChanged.AddListener((value) => { SetFloatOption(i, value); });
+                optionSlider.onValueChanged.AddListener((value) => { SetFloatOption(currentIndex, value); });
             }
 
         }

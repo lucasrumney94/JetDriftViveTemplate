@@ -13,11 +13,11 @@ public class CubeSpawner : VRTool {
 
     void OnEnable()
     {
+        InitializeOptions();
+
         vrInput = transform.GetComponentInParent<ControllerInputTracker>();
 
         vrInput.triggerPressedDown += new ControllerInputDelegate(SpawnCube);
-
-        InitializeOptions();
     }
 
     void OnDisable()
@@ -28,8 +28,8 @@ public class CubeSpawner : VRTool {
     public override void InitializeOptions()
     {
         toolOptions = new Option[3];
-        toolOptions[0] = new Option(ref initialForce, "Initial force");
-        toolOptions[1] = new Option(ref scale, "Initial scale");
+        toolOptions[0] = new Option(ref initialForce, "Initial force", 0f, 10f);
+        toolOptions[1] = new Option(ref scale, "Initial scale", 0.1f, 5f);
         toolOptions[2] = new Option(ref spawnEveryFrame, "Spawn every frame while trigger held?");
     }
 
