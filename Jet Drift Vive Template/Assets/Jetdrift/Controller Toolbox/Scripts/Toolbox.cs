@@ -3,6 +3,22 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+public class ReferenceValue<T> //Taken from Eric Lippert's answer to this question: http://stackoverflow.com/questions/2256048/store-a-reference-to-a-value-type
+{
+    private Func<T> getter;
+    private Action<T> setter;
+    public ReferenceValue(Func<T> getter, Action<T> setter)
+    {
+        this.getter = getter;
+        this.setter = setter;
+    }
+    public T Value
+    {
+        get { return getter(); }
+        set { setter(value); }
+    }
+}
+
 [Serializable]
 public struct Option
 {
@@ -10,27 +26,50 @@ public struct Option
 
     public string name;
 
-    public bool boolValue;
-    public float floatValue;
+    private ReferenceValue<bool> boolReference;
+    private ReferenceValue<float> floatReference;
+
+    public bool boolValue
+    {
+        get
+        {
+            return boolReference.Value;
+        }
+        set
+        {
+            boolReference.Value = value;
+        }
+    }
+    public float floatValue
+    {
+        get
+        {
+            return floatReference.Value;
+        }
+        set
+        {
+            floatReference.Value = value;
+        }
+    }
     public float minValue;
     public float maxValue;
 
-    public Option(ref float newFloat, string optionName, float min = 0f, float max = 1f)
+    public Option(ReferenceValue<float> floatReference, string optionName, float min = 0f, float max = 1f)
     {
         type = typeof(float);
         name = optionName;
-        boolValue = false;
-        floatValue = newFloat;
+        this.boolReference = new ReferenceValue<bool>(() => false, v => { });
+        this.floatReference = floatReference;
         minValue = min;
         maxValue = max;
     }
 
-    public Option(ref bool newBool, string optionName)
+    public Option(ReferenceValue<bool> boolReference, string optionName)
     {
         type = typeof(bool);
         name = optionName;
-        boolValue = newBool;
-        floatValue = 0f;
+        this.boolReference = boolReference;
+        this.floatReference = new ReferenceValue<float>(() => 0f, v => { });
         minValue = 0f;
         maxValue = 0f;
     }

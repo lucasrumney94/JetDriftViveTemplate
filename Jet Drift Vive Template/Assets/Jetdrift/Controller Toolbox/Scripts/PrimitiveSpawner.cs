@@ -45,9 +45,9 @@ public class PrimitiveSpawner : VRTool
     public override void InitializeOptions()
     {
         toolOptions = new Option[3];
-        toolOptions[0] = new Option(ref initialForce, "Initial force");
-        toolOptions[1] = new Option(ref primitiveScale, "Initial scale");
-        toolOptions[2] = new Option(ref RepeatSpawn, "Spawn continuously while trigger held?");
+        toolOptions[0] = new Option(new ReferenceValue<float>(() => initialForce, v => { initialForce = v; }), "Initial force", 0f, 10f);
+        toolOptions[1] = new Option(new ReferenceValue<float>(() => primitiveScale, v => { primitiveScale = v; }), "Initial scale", 0.1f, 5f);
+        toolOptions[2] = new Option(new ReferenceValue<bool>(() => RepeatSpawn, v => { RepeatSpawn = v; }), "Spawn every frame while trigger held?");
     }
 
 

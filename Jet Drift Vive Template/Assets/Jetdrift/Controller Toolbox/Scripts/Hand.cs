@@ -37,7 +37,7 @@ public class Hand : VRTool {
     public override void InitializeOptions()
     {
         toolOptions = new Option[1];
-        toolOptions[0] = new Option(ref forceMultiplier, "Throw strength");
+        toolOptions[0] = new Option(new ReferenceValue<float>(() => forceMultiplier, v => { forceMultiplier = v; }), "Throw strength", 1f, 10f);
     }
 
     public void TryPickup()

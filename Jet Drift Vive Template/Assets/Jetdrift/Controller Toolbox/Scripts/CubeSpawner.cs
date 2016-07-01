@@ -28,9 +28,9 @@ public class CubeSpawner : VRTool {
     public override void InitializeOptions()
     {
         toolOptions = new Option[3];
-        toolOptions[0] = new Option(ref initialForce, "Initial force", 0f, 10f);
-        toolOptions[1] = new Option(ref scale, "Initial scale", 0.1f, 5f);
-        toolOptions[2] = new Option(ref spawnEveryFrame, "Spawn every frame while trigger held?");
+        toolOptions[0] = new Option(new ReferenceValue<float>(() => initialForce, v => { initialForce = v; }), "Initial force", 0f, 10f);
+        toolOptions[1] = new Option(new ReferenceValue<float>(() => scale, v => { scale = v; }), "Initial scale", 0.1f, 5f);
+        toolOptions[2] = new Option(new ReferenceValue<bool>(() => spawnEveryFrame, v => { spawnEveryFrame = v; }), "Spawn every frame while trigger held?");
     }
 
     void Update()
