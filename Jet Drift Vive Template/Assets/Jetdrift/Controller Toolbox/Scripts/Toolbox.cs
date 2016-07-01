@@ -11,13 +11,17 @@ public struct Option
 
     public bool boolValue;
     public float floatValue;
+    public float minValue;
+    public float maxValue;
 
-    public Option(ref float newFloat, string optionName)
+    public Option(ref float newFloat, string optionName, float min = 0f, float max = 1f)
     {
         type = typeof(float);
         name = optionName;
         boolValue = false;
         floatValue = newFloat;
+        minValue = min;
+        maxValue = max;
     }
 
     public Option(ref bool newBool, string optionName)
@@ -26,6 +30,8 @@ public struct Option
         name = optionName;
         boolValue = newBool;
         floatValue = 0f;
+        minValue = 0f;
+        maxValue = 0f;
     }
 }
 
@@ -282,10 +288,14 @@ public class Toolbox : MonoBehaviour {
 
             if (optionToggle != null)
             {
+                optionToggle.isOn = toolOption.boolValue;
                 optionToggle.navigation = navigation;
             }
             else if (optionSlider != null)
             {
+                optionSlider.minValue = toolOption.minValue;
+                optionSlider.maxValue = toolOption.maxValue;
+                optionSlider.value = toolOption.floatValue;
                 optionSlider.navigation = navigation;
             }
 
