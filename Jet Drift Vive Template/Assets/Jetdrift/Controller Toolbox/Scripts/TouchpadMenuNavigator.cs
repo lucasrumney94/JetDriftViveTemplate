@@ -20,6 +20,8 @@ public class TouchpadMenuNavigator : MonoBehaviour {
 
         inputTracker.dpadUpTouchedStart += new ControllerInputDelegate(NavigateMenuUp);
         inputTracker.dpadDownTouchedStart += new ControllerInputDelegate(NavigateMenuDown);
+        inputTracker.dpadRightTouchedStart += new ControllerInputDelegate(NavigateMenuRight);
+        inputTracker.dpadLeftTouchedStart += new ControllerInputDelegate(NavigateMenuLeft);
         inputTracker.triggerPressedDown += new ControllerInputDelegate(MenuSelect);
     }
 
@@ -27,6 +29,8 @@ public class TouchpadMenuNavigator : MonoBehaviour {
     {
         inputTracker.dpadUpTouchedStart -= new ControllerInputDelegate(NavigateMenuUp);
         inputTracker.dpadDownTouchedStart -= new ControllerInputDelegate(NavigateMenuDown);
+        inputTracker.dpadRightTouchedStart -= new ControllerInputDelegate(NavigateMenuRight);
+        inputTracker.dpadLeftTouchedStart -= new ControllerInputDelegate(NavigateMenuLeft);
         inputTracker.triggerPressedDown -= new ControllerInputDelegate(MenuSelect);
     }
 
@@ -58,6 +62,26 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         eventSystem.SetSelectedGameObject(currentSelected);
         AxisEventData axisData = new AxisEventData(eventSystem);
         axisData.moveDir = MoveDirection.Down;
+        ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
+        currentSelected = eventSystem.currentSelectedGameObject;
+        ScrollToActive();
+    }
+
+    private void NavigateMenuRight()
+    {
+        eventSystem.SetSelectedGameObject(currentSelected);
+        AxisEventData axisData = new AxisEventData(eventSystem);
+        axisData.moveDir = MoveDirection.Right;
+        ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
+        currentSelected = eventSystem.currentSelectedGameObject;
+        ScrollToActive();
+    }
+
+    private void NavigateMenuLeft()
+    {
+        eventSystem.SetSelectedGameObject(currentSelected);
+        AxisEventData axisData = new AxisEventData(eventSystem);
+        axisData.moveDir = MoveDirection.Left;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
         ScrollToActive();

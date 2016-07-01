@@ -164,6 +164,7 @@ public class Toolbox : MonoBehaviour {
             toolButton.transform.SetParent(selectionContent);
             toolButton.transform.localScale = Vector3.one;
             toolButton.transform.localPosition = Vector3.zero;
+            toolButton.transform.localRotation = Quaternion.identity;
             Text buttonText = toolButton.transform.GetChild(0).GetComponent<Text>();
             if (buttonText != null)
             {
@@ -261,6 +262,7 @@ public class Toolbox : MonoBehaviour {
             newOptionUIElement.transform.SetParent(optionsContent.transform);
             newOptionUIElement.transform.localScale = Vector3.one;
             newOptionUIElement.transform.localPosition = Vector3.zero;
+            newOptionUIElement.transform.localRotation = Quaternion.identity;
 
             Text optionText = newOptionUIElement.transform.GetComponentInChildren<Text>();
             if (optionText != null)
