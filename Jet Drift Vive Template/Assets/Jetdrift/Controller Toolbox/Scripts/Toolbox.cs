@@ -146,8 +146,15 @@ public class Toolbox : MonoBehaviour {
                 {
                     //Stop Listneing
                     StopListeningForLongPress();
-                    //Do short press action
-                    ToggleToolOptions();
+                    if (selectionCanvas.gameObject.activeInHierarchy) //If selection menu is already open
+                    {
+                        ToggleToolboxMenu();
+                    }
+                    else
+                    {
+                        //Do short press action
+                        ToggleToolOptions();
+                    }
                 }
             }
             else
@@ -155,6 +162,7 @@ public class Toolbox : MonoBehaviour {
                 //Stop listening
                 StopListeningForLongPress();
                 //Do long press action
+                CloseToolOptions();
                 ToggleToolboxMenu();
             }
         }
