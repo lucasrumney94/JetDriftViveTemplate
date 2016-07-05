@@ -95,7 +95,7 @@ public class Teleporter : VRTool
 
     private void TeleportToHitPosition()
     {
-        positionTracker.CameraRigPosition = hitPosition;
+        positionTracker.SetHeadPosition(hitPosition);
         SteamVR_Fade.Start(Color.black, 0.1f);
     }
 }

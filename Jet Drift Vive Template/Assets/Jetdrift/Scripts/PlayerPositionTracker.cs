@@ -22,10 +22,6 @@ public class PlayerPositionTracker : MonoBehaviour {
         {
             return cameraTransform.position;
         }
-        set
-        {
-            rigTransform.position = value - (new Vector3(HeadPosition.x, 0f, HeadPosition.z) - CameraRigPosition);
-        }
     }
     public Vector3 HeadRotationEulerAngles
     {
@@ -40,6 +36,16 @@ public class PlayerPositionTracker : MonoBehaviour {
         {
             return cameraTransform.rotation;
         }
+    }
+
+    public void SetHeadPosition(Vector3 worldPosition)
+    {
+        Vector3 newPosition;
+        newPosition.x = worldPosition.x - (HeadPosition.x - CameraRigPosition.x);
+        newPosition.y = worldPosition.y;
+        newPosition.z = worldPosition.z - (HeadPosition.z - CameraRigPosition.z);
+
+        CameraRigPosition = newPosition;
     }
 
     private Transform rigTransform;
