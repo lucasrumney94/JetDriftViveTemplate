@@ -22,6 +22,10 @@ public class PlayerPositionTracker : MonoBehaviour {
         {
             return cameraTransform.position;
         }
+        set
+        {
+            rigTransform.position = value - new Vector3(cameraTransform.localPosition.x, 0f, cameraTransform.localPosition.z);
+        }
     }
     public Vector3 HeadRotationEulerAngles
     {
