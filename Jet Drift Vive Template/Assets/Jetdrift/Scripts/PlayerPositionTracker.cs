@@ -24,7 +24,7 @@ public class PlayerPositionTracker : MonoBehaviour {
         }
         set
         {
-            rigTransform.position = value + new Vector3(cameraTransform.localPosition.x, 0f, cameraTransform.localPosition.z);
+            rigTransform.position = value - (new Vector3(HeadPosition.x, 0f, HeadPosition.z) - CameraRigPosition);
         }
     }
     public Vector3 HeadRotationEulerAngles
