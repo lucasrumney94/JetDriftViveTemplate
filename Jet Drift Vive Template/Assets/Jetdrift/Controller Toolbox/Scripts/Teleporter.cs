@@ -5,6 +5,7 @@ using System.Collections;
 public class Teleporter : VRTool
 {
     private ControllerInputTracker inputTracker;
+    private PlayerPositionTracker positionTracker;
     private LineRenderer beamRenderer;
 
     public float maxTeleportDistance = 10f;
@@ -17,6 +18,7 @@ public class Teleporter : VRTool
         InitializeOptions();
 
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
+        positionTracker = transform.GetComponentInParent<PlayerPositionTracker>();
 
         inputTracker.triggerPressedDown += new ControllerInputDelegate(StartCastingBeam);
         inputTracker.triggerPressedUp += new ControllerInputDelegate(StopCastingBeam);
@@ -70,8 +72,12 @@ public class Teleporter : VRTool
 
     private void StopCastingBeam()
     {
-        castingBeam = false;
-        TryTeleport();
+        if (castingBeam) //Here to keep function from triggering when tool is selected
+        {
+            castingBeam = false;
+            beamRenderer.enabled = false;
+            TryTeleport();
+        }
     }
 
     private void TryTeleport()
@@ -79,10 +85,17 @@ public class Teleporter : VRTool
         if (validTeleport)
         {
             Debug.Log("Teleport is a valid location!");
+            TeleportToHitPosition();
         }
         else
         {
             Debug.Log("Not a valid teleport location!");
         }
+    }
+
+    private void TeleportToHitPosition()
+    {
+        positionTracker.CameraRigPosition = hitPosition;
+        SteamVR_Fade.Start(Color.black, 0.1f);
     }
 }
