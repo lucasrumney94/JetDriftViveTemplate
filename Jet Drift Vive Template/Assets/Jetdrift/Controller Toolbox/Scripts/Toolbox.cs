@@ -366,7 +366,7 @@ public class Toolbox : MonoBehaviour {
         {
             for (int i = 0; i < optionsUIElements.Length; i++)
             {
-                Toggle optionToggle = optionsUIElements[i].GetComponent<Toggle>();
+                Toggle optionToggle = optionsUIElements[i].GetComponent<Toggle>(); //Should think about caching these for performance if any tool has many options
                 Slider optionSlider = optionsUIElements[i].GetComponent<Slider>();
 
                 if (optionToggle != null)
@@ -378,6 +378,11 @@ public class Toolbox : MonoBehaviour {
                     optionSlider.minValue = activeToolOptions[i].minValue;
                     optionSlider.maxValue = activeToolOptions[i].maxValue;
                     optionSlider.value = activeToolOptions[i].floatValue;
+                    Text optionText = optionSlider.transform.GetComponentInChildren<Text>();
+                    if (optionText != null)
+                    {
+                        optionText.text = string.Format("{0}: {1:F2}", activeToolOptions[i].name, optionSlider.value);
+                    }
                 }
             }
         }
@@ -391,7 +396,6 @@ public class Toolbox : MonoBehaviour {
     public void SetBoolOption(int optionIndex, bool newValue)
     {
         activeToolOptions[optionIndex].boolValue = newValue;
-        Debug.Log("Set option #" + optionIndex + " to " + newValue);
     }
 
     #endregion
