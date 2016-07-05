@@ -112,8 +112,6 @@ public class Toolbox : MonoBehaviour {
     void Start()
     {
         PopulateToolBoxMenu();
-
-        OpenToolOptions(); //Here for testing remove once done
     }
 
     void Update()

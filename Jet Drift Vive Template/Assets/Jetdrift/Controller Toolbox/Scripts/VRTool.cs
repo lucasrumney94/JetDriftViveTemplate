@@ -7,6 +7,7 @@ public class VRTool : MonoBehaviour {
 
     public virtual void InitializeOptions()
     {
-        throw new System.NotImplementedException("Tried to call InitializeOptions on the base class of VRTool! All descendants of VRTool should override this function.");
+        Debug.LogWarning("Tried to call InitializeOptions on the base class of VRTool! Did you mean to override this function?");
+        toolOptions = new Option[0];
     }
 }
