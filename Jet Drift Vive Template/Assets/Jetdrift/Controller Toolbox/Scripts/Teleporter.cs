@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(LineRenderer), typeof(ParabolicRaycaster))]
 public class Teleporter : VRTool
 {
     private ControllerInputTracker inputTracker;
     private PlayerPositionTracker positionTracker;
     private LineRenderer beamRenderer;
+    private ParabolicRaycaster raycaster;
 
-    public float maxTeleportDistance = 10f;
+    public int raycastSegments;
+    public float raycastTravelDistance;
+    public float raycastVelocity;
+    
     public Vector3 hitPosition; //Worldspace position of beam endpoint
     public bool validTeleport = false; //Is hitPosition a valid location to teleport to?
     public bool castingBeam = false;
@@ -33,6 +37,7 @@ public class Teleporter : VRTool
     void Start()
     {
         beamRenderer = GetComponent<LineRenderer>();
+        raycaster = GetComponent<ParabolicRaycaster>();
     }
 
     void Update()
@@ -43,6 +48,13 @@ public class Teleporter : VRTool
         }
     }
 
+    public override void InitializeOptions()
+    {
+        toolOptions = new Option[2];
+        toolOptions[0] = new Option(new ReferenceValue<float>(() => raycastTravelDistance, v => { raycastTravelDistance = v; }), "\'Travel time\' of arc", 1f, 5f);
+        toolOptions[1] = new Option(new ReferenceValue<float>(() => raycastVelocity, v => { raycastVelocity = v; }), "Arc initial velocity", 5f, 50f);
+    }
+
     private void StartCastingBeam()
     {
         castingBeam = true;
@@ -51,16 +63,17 @@ public class Teleporter : VRTool
     private void RaycastBeam()
     {
         Ray beamRay = new Ray(transform.position, transform.forward);
-        RaycastHit beamHit = new RaycastHit();
+        RaycastHit beamHit;
 
-        if (Physics.Raycast(beamRay, out beamHit, maxTeleportDistance))
+        if (raycaster.ParabolicRaycast(out beamHit, transform.eulerAngles, raycastTravelDistance, raycastVelocity, raycastSegments))
         {
             beamRenderer.enabled = true;
             hitPosition = beamHit.point;
             validTeleport = true;
 
-            beamRenderer.SetPosition(0, transform.position);
-            beamRenderer.SetPosition(1, hitPosition);
+            beamRenderer.SetVertexCount(raycastSegments + 2);
+            beamRenderer.SetPositions(ParabolicRaycaster.ParabolicPointsList(transform.eulerAngles, beamHit.distance, raycastVelocity, raycastSegments));
+            beamRenderer.SetPosition(raycastSegments + 1, hitPosition);
         }
         else
         {

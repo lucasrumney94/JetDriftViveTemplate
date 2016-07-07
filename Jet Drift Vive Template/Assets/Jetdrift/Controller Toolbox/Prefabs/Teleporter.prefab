@@ -21,6 +21,7 @@ GameObject:
   - 4: {fileID: 4000013379899096}
   - 120: {fileID: 120000012191918032}
   - 114: {fileID: 114000011185369088}
+  - 114: {fileID: 114000011910221386}
   m_Layer: 0
   m_Name: Teleporter
   m_TagString: Untagged
@@ -53,10 +54,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolOptions: []
-  maxTeleportDistance: 10
+  raycastSegments: 20
+  raycastTravelDistance: 2
+  raycastVelocity: 10
   hitPosition: {x: 0, y: 0, z: 0}
   validTeleport: 0
   castingBeam: 0
+--- !u!114 &114000011910221386
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013110203318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be77bffceebcc0545beae89259355c2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segments: 10
+  time: 1
+  velocity: 10
 --- !u!120 &120000012191918032
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -70,7 +87,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9489aa76a238a2f4c8664dbf62cace0a, type: 2}
+  - {fileID: 2100000, guid: 6738596cdc06314408d58ccde8ef4149, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -94,8 +111,8 @@ LineRenderer:
     endWidth: 0.05
     m_StartColor:
       serializedVersion: 2
-      rgba: 4278190335
+      rgba: 4294967295
     m_EndColor:
       serializedVersion: 2
-      rgba: 4278190335
+      rgba: 4294967295
   m_UseWorldSpace: 1
