@@ -1,21 +1,26 @@
-﻿using UnityEngine;
+﻿/*
+Attatch to a canvas object to enable navigation with the vive touchpad. Will only function on one canvas at a time per controller.
+It is highly recommended to assign a bright and distinctive 'Highlighted Color' property on all selectable UI elements on the canvas.
+*/
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
 public class TouchpadMenuNavigator : MonoBehaviour {
 
-    public GameObject currentSelected;
-    public EventSystem eventSystem; //TODO: automatically assign eventSystem
+    public GameObject currentSelected; //Currently highlighted UI object
 
     public ScrollRect scrollRect; //Optional parameter to help navigate menus inside a scrollable area
 
+    private EventSystem eventSystem;
     private ControllerInputTracker inputTracker;
-
-    private RectTransform[] content;
 
     void OnEnable()
     {
+        FindEventSystem();
+        FindScrollRect();
+
         inputTracker = transform.GetComponentInParent<ControllerInputTracker>();
 
         inputTracker.dpadUpTouchedStart += new ControllerInputDelegate(NavigateMenuUp);
@@ -34,9 +39,20 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         inputTracker.triggerPressedDown -= new ControllerInputDelegate(MenuSelect);
     }
 
-    void Start()
+    private void FindEventSystem()
     {
-        content = transform.GetComponentsInChildren<RectTransform>();
+        if (eventSystem == null)
+        {
+            eventSystem = FindObjectOfType<EventSystem>();
+        }
+    }
+
+    private void FindScrollRect()
+    {
+        if (scrollRect == null)
+        {
+            scrollRect = transform.GetComponentInChildren<ScrollRect>();
+        }
     }
 
     void Update()
@@ -47,16 +63,28 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Ensure that some UI object is always selected, to keep the navigation from breaking
+    /// </summary>
     private void ResetSelected()
     {
-        if (scrollRect.content.transform.childCount > 0)
+        if (scrollRect == null && transform.childCount > 0)
+        {
+            currentSelected = transform.GetChild(0).gameObject;
+            eventSystem.SetSelectedGameObject(currentSelected);
+        }
+        else if (scrollRect.content.transform.childCount > 0)
         {
             currentSelected = scrollRect.content.transform.GetChild(0).gameObject;
             eventSystem.SetSelectedGameObject(currentSelected);
         }
     }
 
-    private void CheckForSelectedOutOfBounds() //Temporary solution to keep selection from accidentally switching canvas
+    /// <summary>
+    /// If the navigation mode on all UI objects is not set to 'Explicit', Unity will make navigation links between seperate canvases, causing broken behavior when navigating.
+    /// This function is a simple solution, and needs to be called whenever navigation takes place.
+    /// </summary>
+    private void CheckForSelectedOutOfBounds()
     {
         if (currentSelected.transform.parent != scrollRect.content.transform)
         {
@@ -66,48 +94,43 @@ public class TouchpadMenuNavigator : MonoBehaviour {
 
     private void NavigateMenuUp()
     {
-        eventSystem.SetSelectedGameObject(currentSelected);
-        AxisEventData axisData = new AxisEventData(eventSystem);
-        axisData.moveDir = MoveDirection.Up;
-        ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
-        currentSelected = eventSystem.currentSelectedGameObject;
-        CheckForSelectedOutOfBounds();
-        ScrollToActive();
+        NavigateMenu(MoveDirection.Up);
     }
 
     private void NavigateMenuDown()
     {
-        eventSystem.SetSelectedGameObject(currentSelected);
-        AxisEventData axisData = new AxisEventData(eventSystem);
-        axisData.moveDir = MoveDirection.Down;
-        ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
-        currentSelected = eventSystem.currentSelectedGameObject;
-        CheckForSelectedOutOfBounds();
-        ScrollToActive();
+        NavigateMenu(MoveDirection.Down);
     }
 
     private void NavigateMenuRight()
     {
-        eventSystem.SetSelectedGameObject(currentSelected);
-        AxisEventData axisData = new AxisEventData(eventSystem);
-        axisData.moveDir = MoveDirection.Right;
-        ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
-        currentSelected = eventSystem.currentSelectedGameObject;
-        CheckForSelectedOutOfBounds();
-        ScrollToActive();
+        NavigateMenu(MoveDirection.Right);
     }
 
     private void NavigateMenuLeft()
     {
+        NavigateMenu(MoveDirection.Left);
+    }
+
+    /// <summary>
+    /// Hack-y solution to allow navigation of multiple UI's with one EventSystem
+    /// Works for both navigating between objects and setting values on sliders
+    /// </summary>
+    /// <param name="direction">Direction to send to the UI navigation system</param>
+    private void NavigateMenu(MoveDirection direction)
+    {
         eventSystem.SetSelectedGameObject(currentSelected);
         AxisEventData axisData = new AxisEventData(eventSystem);
-        axisData.moveDir = MoveDirection.Left;
+        axisData.moveDir = direction;
         ExecuteEvents.Execute(currentSelected, axisData, ExecuteEvents.moveHandler);
         currentSelected = eventSystem.currentSelectedGameObject;
         CheckForSelectedOutOfBounds();
         ScrollToActive();
     }
 
+    /// <summary>
+    /// Equivalent to clicking on the current selected UI object
+    /// </summary>
     private void MenuSelect()
     {
         eventSystem.SetSelectedGameObject(currentSelected);
@@ -117,9 +140,12 @@ public class TouchpadMenuNavigator : MonoBehaviour {
         ExecuteEvents.Execute(currentSelected, baseData, ExecuteEvents.submitHandler);
     }
 
+    /// <summary>
+    /// If the selected UI object is outside the boundaries of its content rect, scroll scrollRect so currentSelected is fully visable.
+    /// </summary>
     private void ScrollToActive()
     {
-        if (currentSelected != null)
+        if (scrollRect != null && currentSelected != null)
         {
             RectTransform currentTransform = currentSelected.GetComponent<RectTransform>();
             RectTransform content = scrollRect.content;

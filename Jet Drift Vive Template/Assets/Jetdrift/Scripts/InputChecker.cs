@@ -1,6 +1,8 @@
 ﻿/*
+Test script to make sure inputs are working correctly
+
 Observations:
-Once Trigger is pulled, trigger strength tends to stick at ~0.035, unless manually pushed back to resting position
+After trigger is released, trigger strength tends to stick at ~0.035, unless manually pushed back to resting position
 TriggerTouchedDown is called when triggerStrength > 0.25, but TriggerTouchedUp is not called until triggerStrength < 0.2
 TriggerPressedDown is called when triggerStrentgh > 0.55, but TriggerPressedUp is not called until triggerStrength < 0.45
 TriggerStrength is exactly 1.0 after the 'click' is heard when pulling
@@ -126,7 +128,7 @@ public class InputChecker : MonoBehaviour {
         touchpadAngle.text = string.Format("Touch Angle: {0:F1}", angle);
     }
 
-    public void UpdateDPadDirection(string direction)
+    public void UpdateDPadDirection(Direction direction)
     {
         dpadDirection.text = string.Format("DPad Direction: {0}", direction);
     }

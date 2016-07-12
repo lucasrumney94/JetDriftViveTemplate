@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+Add this component to [CameraRig]
+Tracks the transform of the HMD, and provides a function to change the position of [CameraRig] based on a desired HMD position
+*/
+using UnityEngine;
 using System.Collections;
 
 public class PlayerPositionTracker : MonoBehaviour {
@@ -38,6 +42,10 @@ public class PlayerPositionTracker : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Provide a desired player position (y should be the floor height), and [CameraRig] will be moved to place the player camera above that point
+    /// </summary>
+    /// <param name="worldPosition"></param>
     public void SetHeadPosition(Vector3 worldPosition)
     {
         Vector3 newPosition;
@@ -51,7 +59,7 @@ public class PlayerPositionTracker : MonoBehaviour {
     private Transform rigTransform;
     private Transform cameraTransform;
 
-    void Start()
+    void OnEnable()
     {
         rigTransform = transform;
         cameraTransform = headCamera.transform;

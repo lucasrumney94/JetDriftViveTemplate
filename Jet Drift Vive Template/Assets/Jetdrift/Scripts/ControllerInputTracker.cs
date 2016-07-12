@@ -1,41 +1,75 @@
-﻿using UnityEngine;
+﻿/*
+Add this component to both controllers in [CameraRig]
+Triggers events when controller buttons are pressed;
+contains public variables for button specific information;
+contains public variables for controller transform + velocity;
+*/
+using UnityEngine;
 using System.Collections;
 
 public delegate void ControllerInputDelegate();
 
+public enum Direction
+{
+    None,
+    Up,
+    Down,
+    Right,
+    Left
+}
+
 public class ControllerInputTracker : MonoBehaviour {
 
-    private Transform origin;
-    private ushort maxPulseLength = 3999;
+    #region Public Variables
 
-    public Vector3 position;
-    public Quaternion rotation;
+    private Transform origin; //Transform for translating controller position & physics information into worldspace
+    private ushort maxPulseLength = 3999; //Hardware limit for vibration pulse length, in microseconds
 
-    public Vector3 velocity;
-    public Vector3 angularVelocity;
+    public Vector3 position; //Worldspace potision of controller
+    public Quaternion rotation; //Worldspace rotation of controller
 
-    public Vector2 touchpadAxis;
+    public Vector3 velocity; //Velocity of controller
+    public Vector3 angularVelocity; //Angular Velocity of controller
+
+    public Vector2 touchpadAxis; //Current touched position of touchpad; (0, 0) is center of touchpad
     private Vector2 lastTouchpadAxis;
-    public Vector2 touchpadAxisDelta;
+    public Vector2 touchpadAxisDelta; //Change in touchpadAxis between this frame and the last
 
-    public float touchpadAngle;
+    public float touchpadAngle; //Between 0 and 360 going counter-clockwise; 0 is in the positive 'x' direction
     private float lastTouchpadAngle;
-    public float touchpadAngleDelta;
+    public float touchpadAngleDelta; //Change in touchpadAngle between this frame and the last
 
     public float dpadDeadzone = 0.25f; //Inside a circle of this radius at the center of the touchpad no direction is registered
-    public string dpadDirection = "None";
-    private string lastDpadDirection;
+    public Direction dpadDirection = Direction.None; //Enum indicating which quadrant of the touchpad is currently touched, if any, for using the touchpad as a directional pad
+    private Direction lastDpadDirection;
 
-    public float triggerStrength;
+    public float triggerStrength; //Analog value of the trigger's pressed state, between 0 and 1
     private float lastTriggerStrength;
-    public float triggerStrengthDelta;
+    public float triggerStrengthDelta; //Change in triggerStrength between this frame and the last
 
-    public bool triggerTouched; //Light pull
-    public bool triggerPressed; //Heavy pull, triggers directly before 'click' on trigger is heard
-    public bool gripPressed;
-    public bool menuPressed;
-    public bool touchpadTouched;
-    public bool touchpadPressed;
+    public bool triggerTouched; //Light pull, true when triggerStrength is > 0.25
+    public bool triggerPressed; //Heavy pull, true when triggerStrength is > 0.55, triggers before 'click' on trigger is heard
+    public bool gripPressed; //Either of the side buttons on the controller
+    public bool menuPressed; //Button above trackpad
+    public bool touchpadTouched; //True when finger is resting on trackpad
+    public bool touchpadPressed; //True after touchpad has been clicked
+
+    #endregion
+
+    #region Event Definitions
+
+    /*
+    Assign to these using += or -= when you want to add or remove a listener for an input event
+    Example:
+    ControllerInputTracker inputTracker = GetComponent<ControllerInputTracker>();
+
+    private void Fire() { ... }  <== NB: void function with no parameters
+
+    //Start calling Fire() every time trigger is pressed down:
+    inputTracker.triggerPressedDown += new ControllerInputDelegate(Fire);
+    //or to stop listening for the event:
+    inputTracker.triggerPressedDown -= new ControllerInputDelegate(Fire);
+    */
 
     public event ControllerInputDelegate triggerTouchedDown;
     public event ControllerInputDelegate triggerTouchedUp;
@@ -74,6 +108,10 @@ public class ControllerInputTracker : MonoBehaviour {
     public event ControllerInputDelegate dpadDownPressedEnd;
     public event ControllerInputDelegate dpadRightPressedEnd;
     public event ControllerInputDelegate dpadLeftPressedEnd;
+
+    #endregion
+
+    #region Event Trigger Functions
 
     //Events cannot be passed as arguements, so there is no simple way to reference them cleanly
 
@@ -301,26 +339,18 @@ public class ControllerInputTracker : MonoBehaviour {
         }
     }
 
+    #endregion
+
     private ulong triggerMask = SteamVR_Controller.ButtonMask.Trigger;
     private ulong gripMask = SteamVR_Controller.ButtonMask.Grip;
     private ulong menuMask = SteamVR_Controller.ButtonMask.ApplicationMenu;
     private ulong touchpadMask = SteamVR_Controller.ButtonMask.Touchpad;
 
-    //private Valve.VR.EVRButtonId trigger = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-    //public bool triggerDown;
-    //public bool triggerUp;
-    //public bool triggerHeld;
-
-    //private Valve.VR.EVRButtonId grip = Valve.VR.EVRButtonId.k_EButton_Grip;
-    //public bool gripDown;
-    //public bool gripUp;
-    //public bool gripHeld;
-
     private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObject.index); } }
     private SteamVR_TrackedObject trackedObject;
     public int index;
 
-    void Start()
+    void OnEnable()
     {
         triggerMask = SteamVR_Controller.ButtonMask.Trigger;
         gripMask = SteamVR_Controller.ButtonMask.Grip;
@@ -334,6 +364,7 @@ public class ControllerInputTracker : MonoBehaviour {
 
     void Update()
     {
+        //Set public variables
         position = origin.TransformPoint(transform.localPosition);
         rotation = transform.rotation;
         velocity = origin.TransformVector(controller.velocity);
@@ -348,6 +379,48 @@ public class ControllerInputTracker : MonoBehaviour {
         touchpadAngle = GetTouchpadAngle(touchpadAxis);
         touchpadAngleDelta = touchpadAngle - lastTouchpadAngle;
 
+        CheckInputs();
+
+        //Check for touchpad direction
+        if (touchpadPressed == true)
+        {
+            dpadDirection = GetDPadDirection(touchpadAngle);
+        }
+        else if (touchpadTouched == true)
+        {
+            dpadDirection = GetDPadDirection(touchpadAngle);
+        }
+        else
+        {
+            dpadDirection = Direction.None;
+        }
+
+        //Check for dpad direction change, enables triggering multiple direction inputs without lifting finger
+        if (dpadDirection != lastDpadDirection)
+        {
+            if (touchpadPressed == true)
+            {
+                DpadPressEnd(lastDpadDirection);
+                DpadPressStart(lastDpadDirection);
+            }
+            else if (touchpadTouched == true)
+            {
+                DpadTouchEnd(lastDpadDirection);
+                DpadTouchStart(dpadDirection);
+            }
+        }
+
+        lastTriggerStrength = triggerStrength;
+        lastTouchpadAxis = touchpadAxis;
+        lastTouchpadAngle = touchpadAngle;
+        lastDpadDirection = dpadDirection;
+    }
+
+    /// <summary>
+    /// Checks SteamVR_Controller.Device.Get[Touch/Press][Up/Down], calls the appropiate event triggers, and sets button state bools
+    /// </summary>
+    private void CheckInputs()
+    {
         if (controller.GetTouchDown(triggerMask))
         {
             triggerTouched = true;
@@ -413,41 +486,12 @@ public class ControllerInputTracker : MonoBehaviour {
             touchpadPressed = false;
             OnTouchpadPressedUp();
         }
-
-        //Check for touchpad direction
-        if (touchpadPressed == true)
-        {
-            dpadDirection = GetDPadDirection(touchpadAngle);
-        }
-        else if (touchpadTouched == true)
-        {
-            dpadDirection = GetDPadDirection(touchpadAngle);
-        }
-        else
-        {
-            dpadDirection = "None";
-        }
-
-        if (dpadDirection != lastDpadDirection)
-        {
-            if (touchpadPressed == true)
-            {
-                DpadPressEnd(lastDpadDirection);
-                DpadPressStart(lastDpadDirection);
-            }
-            else if (touchpadTouched == true)
-            {
-                DpadTouchEnd(lastDpadDirection);
-                DpadTouchStart(dpadDirection);
-            }
-        }
-
-        lastTriggerStrength = triggerStrength;
-        lastTouchpadAxis = touchpadAxis;
-        lastTouchpadAngle = touchpadAngle;
-        lastDpadDirection = dpadDirection;
     }
 
+    /// <summary>
+    /// For sending vibration to the controller, still needs testing
+    /// </summary>
+    /// <param name="microSeconds"></param>
     public void VibrateController(ushort microSeconds)
     {
         ushort duration = microSeconds > maxPulseLength ? maxPulseLength : microSeconds;
@@ -468,107 +512,111 @@ public class ControllerInputTracker : MonoBehaviour {
         return angle;
     }
 
-    private string GetDPadDirection(float angle)
+    #region Dpad Touch/Press Detection
+
+    private Direction GetDPadDirection(float angle)
     {
         if (touchpadAxis.magnitude < dpadDeadzone)
         {
-            return "None";
+            return Direction.None;
         }
         else if (45f < angle && angle <= 135f)
         {
-            return "Up";
+            return Direction.Up;
         }
         else if (135f < angle && angle <= 225f)
         {
-            return "Left";
+            return Direction.Left;
         }
         else if (225f < angle && angle <= 315f)
         {
-            return "Down";
+            return Direction.Down;
         }
         else
         {
-            return "Right";
+            return Direction.Right;
         }
     }
 
-    private void DpadTouchStart(string direction)
+    private void DpadTouchStart(Direction direction)
     {
-        if (direction == "Up")
+        if (direction == Direction.Up)
         {
             OnDpadUpTouchedStart();
         }
-        else if (direction == "Down")
+        else if (direction == Direction.Down)
         {
             OnDpadDownTouchedStart();
         }
-        else if (direction == "Right")
+        else if (direction == Direction.Right)
         {
             OnDpadRightTouchedStart();
         }
-        else if (direction == "Left")
+        else if (direction == Direction.Left)
         {
             OnDpadLeftTouchedStart();
         }
     }
 
-    private void DpadTouchEnd(string direction)
+    private void DpadTouchEnd(Direction direction)
     {
-        if (direction == "Up")
+        if (direction == Direction.Up)
         {
             OnDpadUpTouchedEnd();
         }
-        else if (direction == "Down")
+        else if (direction == Direction.Down)
         {
             OnDpadDownTouchedEnd();
         }
-        else if (direction == "Right")
+        else if (direction == Direction.Right)
         {
             OnDpadRightTouchedEnd();
         }
-        else if (direction == "Left")
+        else if (direction == Direction.Left)
         {
             OnDpadLeftTouchedEnd();
         }
     }
 
-    private void DpadPressStart(string direction)
+    private void DpadPressStart(Direction direction)
     {
-        if (direction == "Up")
+        if (direction == Direction.Up)
         {
             OnDpadUpPressedStart();
         }
-        else if (direction == "Down")
+        else if (direction == Direction.Down)
         {
             OnDpadDownPressedStart();
         }
-        else if (direction == "Right")
+        else if (direction == Direction.Right)
         {
             OnDpadRightPressedStart();
         }
-        else if (direction == "Left")
+        else if (direction == Direction.Left)
         {
             OnDpadLeftPressedStart();
         }
     }
 
-    private void DpadPressEnd(string direction)
+    private void DpadPressEnd(Direction direction)
     {
-        if (direction == "Up")
+        if (direction == Direction.Up)
         {
             OnDpadUpPressedEnd();
         }
-        else if (direction == "Down")
+        else if (direction == Direction.Down)
         {
             OnDpadDownPressedEnd();
         }
-        else if (direction == "Right")
+        else if (direction == Direction.Right)
         {
             OnDpadRightPressedEnd();
         }
-        else if (direction == "Left")
+        else if (direction == Direction.Left)
         {
             OnDpadLeftPressedEnd();
         }
     }
+
+    #endregion
 }

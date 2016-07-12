@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+Base class for tools associated with a vive controller.
+Can assign class variables to a list of bool or float options, which can be modified in-game when instantiated through a Toolbox
+*/
+using UnityEngine;
 using System.Collections;
 
 public class VRTool : MonoBehaviour {

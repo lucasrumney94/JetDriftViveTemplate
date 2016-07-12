@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿/*
+Add this component to an empty GameObject childed to a controller.
+Enables managing of multiple VRTools, and in-game modifiable options on each tool
+*/
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System;
 
+//Magic from stackoverflow to make the options menu work
 public class ReferenceValue<T> //Taken from Eric Lippert's answer to this question: http://stackoverflow.com/questions/2256048/store-a-reference-to-a-value-type
 {
     private Func<T> getter;
@@ -19,6 +24,11 @@ public class ReferenceValue<T> //Taken from Eric Lippert's answer to this questi
     }
 }
 
+/// <summary>
+/// Struct that can take a float or bool class variable, and allows assigning to the source variable whenever the Option is changed
+/// The ReferenceValue parameter needs to be assigned like this (for a class variable 'speed'):
+/// new ReferenceValue<float>(() => speed, v => { speed = v; })
+/// </summary>
 [Serializable]
 public struct Option
 {
@@ -79,23 +89,24 @@ public class Toolbox : MonoBehaviour {
 
     private ControllerInputTracker inputTracker;
 
-    public Canvas selectionCanvas;
-    public RectTransform selectionContent; //Assign to the 'content' child of the scroll rect
+    public Canvas selectionCanvas; //Canvas for switching between tools
+    public RectTransform selectionContent; //Assign to the 'content' child of the selectionCanvas ScrollRect
 
-    public Canvas optionsCanvas;
-    public RectTransform optionsContent;
+    public Canvas optionsCanvas; //Canvas for changing tool options
+    public RectTransform optionsContent; //Assign to the 'content' child of the selectionCanvas ScrollRect
 
     private GameObject[] optionsUIElements;
 
+    //Can be found in Jetdrift/Controller Toolbox/Prefabs/UI
     public Button selectionButtonPrefab;
     public Toggle toggleOptionPrefab;
     public Slider sliderOptionPrefab;
 
-    public VRTool[] toolPrefabs;
+    public VRTool[] toolPrefabs; //List of VRTools available to switch between
 
-    public VRTool activeTool;
+    public VRTool activeTool; //Current selected tool, can be void by default
 
-    public Option[] activeToolOptions;
+    public Option[] activeToolOptions; //Leave empty, can be used to modify tool options in the inspector instead of in-game
 
     void OnEnable()
     {
@@ -125,6 +136,9 @@ public class Toolbox : MonoBehaviour {
     private bool listeningForLongPress = false;
     private float timeOfLastMenuDown;
 
+    /// <summary>
+    /// Called when the menu toggle button is pressed
+    /// </summary>
     private void StartListeningForLongPress()
     {
         listeningForLongPress = true;
@@ -136,6 +150,11 @@ public class Toolbox : MonoBehaviour {
         listeningForLongPress = false;
     }
 
+    /// <summary>
+    /// Called every frame
+    /// Check if the menu toggle button has been held down for at least one second, and Open the toolbox menu if it has.
+    /// Otherwise, open the tool options menu, or close the toolbox menu if it's already open.
+    /// </summary>
     private void ListenForLongPress()
     {
         if (listeningForLongPress)
@@ -208,6 +227,11 @@ public class Toolbox : MonoBehaviour {
         selectionCanvas.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Instantiate a menu button in the selection canvas for each assigned VRTool prefab,
+    /// set each button's text and onClick event to call ChangeActiveTool([associated vr tool]),
+    /// and sets the navitagion mode on each element to vertical.
+    /// </summary>
     public void PopulateToolBoxMenu()
     {
         foreach (VRTool tool in toolPrefabs)
@@ -238,11 +262,14 @@ public class Toolbox : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sets the active tool to newTool, and closes the selection menu
+    /// </summary>
+    /// <param name="newTool"></param>
     public void ChangeActiveTool(VRTool newTool)
     {
         activeTool = newTool;
         CloseToolboxMenu();
-        Debug.Log(newTool.name + " was set as active tool!");
     }
 
     #endregion
@@ -296,6 +323,11 @@ public class Toolbox : MonoBehaviour {
         optionsCanvas.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Instantiates UI Toggles and Sliders for the Options on the active tool,
+    /// sets the UI object OnValueChanged event to assign to the associated Option,
+    /// and sets up the UI navigation mode on each button to vertical.
+    /// </summary>
     private void PopulateToolOptionsMenu()
     {
         optionsUIElements = new GameObject[activeToolOptions.Length];
@@ -312,7 +344,7 @@ public class Toolbox : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Tool option not set to valid type!");
+                Debug.Log("Tool option not set to valid type! Use either float or bool.");
                 return;
             }
 
@@ -341,14 +373,14 @@ public class Toolbox : MonoBehaviour {
 
             int currentIndex = i; //Necessary for some reason to do with delegates / lambda
 
-            if (optionToggle != null)
+            if (optionToggle != null) //If the instantiated UI object is a toggle
             {
                 optionToggle.isOn = activeToolOptions[i].boolValue;
                 optionToggle.navigation = navigation;
 
                 optionToggle.onValueChanged.AddListener((value) => { SetBoolOption(currentIndex, value); });
             }
-            else if (optionSlider != null)
+            else if (optionSlider != null) //If the instantiated UI object is a slider
             {
                 optionSlider.minValue = activeToolOptions[i].minValue;
                 optionSlider.maxValue = activeToolOptions[i].maxValue;
@@ -360,13 +392,17 @@ public class Toolbox : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Called every frame.
+    /// Updates the Options UI to match the inspector Options values
+    /// </summary>
     private void UpdateOptionsUI()
     {
         if (optionsUIElements != null)
         {
             for (int i = 0; i < optionsUIElements.Length; i++)
             {
-                Toggle optionToggle = optionsUIElements[i].GetComponent<Toggle>(); //Should think about caching these for performance if any tool has many options
+                Toggle optionToggle = optionsUIElements[i].GetComponent<Toggle>();
                 Slider optionSlider = optionsUIElements[i].GetComponent<Slider>();
 
                 if (optionToggle != null)
