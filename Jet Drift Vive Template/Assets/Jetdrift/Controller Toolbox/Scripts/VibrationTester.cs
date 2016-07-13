@@ -24,7 +24,7 @@ public class VibrationTester : VRTool {
     {
         toolOptions = new Option[2];
         toolOptions[0] = new Option(new ReferenceValue<float>(() => strength, v => { strength= v; }), "Vibration Strength", 0f, 3999f);
-        toolOptions[1] = new Option(new ReferenceValue<float>(() => duration, v => { duration = v; }), "Duration", 0f, 2f);
+        toolOptions[1] = new Option(new ReferenceValue<float>(() => duration, v => { duration = v; }), "Duration", 0f, 0.2f);
     }
 
     private void Vibrate()
