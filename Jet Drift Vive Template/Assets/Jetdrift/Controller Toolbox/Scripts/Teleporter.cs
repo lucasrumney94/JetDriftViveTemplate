@@ -65,14 +65,14 @@ public class Teleporter : VRTool
         Ray beamRay = new Ray(transform.position, transform.forward);
         RaycastHit beamHit;
 
-        if (raycaster.ParabolicRaycast(out beamHit, transform.eulerAngles, raycastTravelDistance, raycastVelocity, raycastSegments))
+        if (raycaster.ParabolicRaycast(out beamHit, transform.position, transform.eulerAngles, raycastTravelDistance, raycastVelocity, raycastSegments))
         {
             beamRenderer.enabled = true;
             hitPosition = beamHit.point;
             validTeleport = true;
 
             beamRenderer.SetVertexCount(raycastSegments + 2);
-            beamRenderer.SetPositions(ParabolicRaycaster.ParabolicPointsList(transform.eulerAngles, beamHit.distance, raycastVelocity, raycastSegments));
+            beamRenderer.SetPositions(ParabolicRaycaster.ParabolicPointsList(transform.position, transform.eulerAngles, beamHit.distance, raycastVelocity, raycastSegments));
             beamRenderer.SetPosition(raycastSegments + 1, hitPosition);
         }
         else

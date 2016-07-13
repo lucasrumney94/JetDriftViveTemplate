@@ -14,7 +14,7 @@ public class ParabolicRaycaster : MonoBehaviour {
 
     void Update()
     {
-        curvePoints = ParabolicPointsList(transform.eulerAngles, time, velocity, segments);
+        curvePoints = ParabolicPointsList(Vector3.zero, transform.eulerAngles, time, velocity, segments);
         //RaycastHit hit;
         //if (ParabolicRaycast(out hit, transform.eulerAngles, time, velocity, segments))
         //{
@@ -22,7 +22,7 @@ public class ParabolicRaycaster : MonoBehaviour {
         //}
     }
 
-    public static Vector3[] ParabolicPointsList(Vector3 eulerAngles, float travelTime, float initialVelocity, int segmentCount = 10)
+    public static Vector3[] ParabolicPointsList(Vector3 origin, Vector3 eulerAngles, float travelTime, float initialVelocity, int segmentCount = 10)
     {
         Vector3[] points = new Vector3[segmentCount + 1];
 
@@ -34,7 +34,7 @@ public class ParabolicRaycaster : MonoBehaviour {
         for (int i = 0; i < points.Length; i++)
         {
             float t = ((float)i / (points.Length - 1)) * travelTime;
-            points[i] = new Vector3(t * xAxisVelocity, ((g / (2f)) * Mathf.Pow(t, 2)) + (verticalVelocity * t), t * zAxisVelocity);
+            points[i] = new Vector3(t * xAxisVelocity, ((g / (2f)) * Mathf.Pow(t, 2)) + (verticalVelocity * t), t * zAxisVelocity) + origin;
         }
 
         return points;
@@ -49,9 +49,9 @@ public class ParabolicRaycaster : MonoBehaviour {
     /// <param name="initialVelocity"></param>
     /// <param name="segmentCount"></param>
     /// <returns></returns>
-    public bool ParabolicRaycast(out RaycastHit hit, Vector3 eulerAngles, float travelTime, float initialVelocity, int segmentCount = 10)
+    public bool ParabolicRaycast(out RaycastHit hit, Vector3 origin, Vector3 eulerAngles, float travelTime, float initialVelocity, int segmentCount = 10)
     {
-        Vector3[] points = ParabolicPointsList(eulerAngles, travelTime, initialVelocity, segmentCount);
+        Vector3[] points = ParabolicPointsList(origin, eulerAngles, travelTime, initialVelocity, segmentCount);
 
         for (int i = 0; i < segmentCount; i++)
         {
