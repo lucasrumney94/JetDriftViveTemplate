@@ -92,7 +92,7 @@ public class Teleporter : VRTool
             }
             else
             {
-                hitPosition = Vector3.zero;
+                hitPosition = beamHit.point;
                 validTeleport = false;
 
                 //Draw an invalid teleport marker
