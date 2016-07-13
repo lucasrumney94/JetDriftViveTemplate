@@ -110,11 +110,14 @@ public class Teleporter : VRTool
 
     private void StopCastingBeam()
     {
-        if (castingBeam) //Here to keep function from triggering when tool is selected
+        if (castingBeam)
         {
             castingBeam = false;
             beamRenderer.enabled = false;
+            RemoveTargetMarker();
+
             TryTeleport();
+
         }
     }
 
