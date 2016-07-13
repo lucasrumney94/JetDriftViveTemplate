@@ -541,7 +541,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &1061897883
+--- !u!43 &1126757932
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -971,7 +971,7 @@ Prefab:
     - target: {fileID: 3356518, guid: ef118035cf54c904484caaf63547fde0, type: 2}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1061897883}
+      objectReference: {fileID: 1126757932}
     - target: {fileID: 114000014168841846, guid: ef118035cf54c904484caaf63547fde0,
         type: 2}
       propertyPath: eventSystem

@@ -9,6 +9,9 @@ public class Teleporter : VRTool
     private LineRenderer beamRenderer;
     private ParabolicRaycaster raycaster;
 
+    public GameObject targetMarkerPrefab;
+    private GameObject targetMarker;
+
     public int raycastSegments;
     public float raycastTravelDistance;
     public float raycastVelocity;
@@ -38,6 +41,13 @@ public class Teleporter : VRTool
     {
         beamRenderer = GetComponent<LineRenderer>();
         raycaster = GetComponent<ParabolicRaycaster>();
+
+        if (targetMarkerPrefab != null)
+        {
+            targetMarker = Instantiate(targetMarkerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            targetMarker.transform.SetParent(transform);
+            targetMarker.SetActive(false);
+        }
     }
 
     void Update()
@@ -68,18 +78,33 @@ public class Teleporter : VRTool
         if (raycaster.ParabolicRaycast(out beamHit, transform.position, transform.eulerAngles, raycastTravelDistance, raycastVelocity, raycastSegments))
         {
             beamRenderer.enabled = true;
-            hitPosition = beamHit.point;
-            validTeleport = true;
 
             beamRenderer.SetVertexCount(raycastSegments + 2);
             beamRenderer.SetPositions(ParabolicRaycaster.ParabolicPointsList(transform.position, transform.eulerAngles, beamHit.distance, raycastVelocity, raycastSegments));
             beamRenderer.SetPosition(raycastSegments + 1, hitPosition);
+
+            if (beamHit.normal.y > 0.01f) //If the surface has a positive slope
+            {
+                hitPosition = beamHit.point;
+                validTeleport = true;
+
+                PlaceTargetMarker(hitPosition, beamHit.normal);
+            }
+            else
+            {
+                hitPosition = Vector3.zero;
+                validTeleport = false;
+
+                //Draw an invalid teleport marker
+            }
         }
         else
         {
             beamRenderer.enabled = false;
             hitPosition = Vector3.zero;
             validTeleport = false;
+
+            RemoveTargetMarker();
         }
     }
 
@@ -90,6 +115,28 @@ public class Teleporter : VRTool
             castingBeam = false;
             beamRenderer.enabled = false;
             TryTeleport();
+        }
+    }
+
+    private void PlaceTargetMarker(Vector3 position, Vector3 surfaceNormal)
+    {
+        if (targetMarker != null)
+        {
+            if (targetMarker.activeInHierarchy == false)
+            {
+                targetMarker.SetActive(true);
+            }
+            Vector3 rotation = new Vector3(surfaceNormal.z * 90f, 0f, surfaceNormal.x * -90f); //Conversion might need some refinement to match surface rotation correctly
+            targetMarker.transform.position = position;
+            targetMarker.transform.eulerAngles = rotation;
+        }
+    }
+
+    private void RemoveTargetMarker()
+    {
+        if (targetMarker != null && targetMarker.activeInHierarchy == true)
+        {
+            targetMarker.SetActive(false);
         }
     }
 

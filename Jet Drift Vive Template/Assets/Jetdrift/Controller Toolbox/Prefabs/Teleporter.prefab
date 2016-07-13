@@ -54,6 +54,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolOptions: []
+  targetMarkerPrefab: {fileID: 1000012958661298, guid: a4c19bd23d7c23a43af4dccd9be8a860,
+    type: 2}
   raycastSegments: 20
   raycastTravelDistance: 2
   raycastVelocity: 10
