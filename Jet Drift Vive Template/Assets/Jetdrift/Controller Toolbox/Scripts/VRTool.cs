@@ -7,6 +7,8 @@ using System.Collections;
 
 public class VRTool : MonoBehaviour {
 
+    protected ControllerInputTracker vrInput;
+
     public Option[] toolOptions;
 
     /// <summary>

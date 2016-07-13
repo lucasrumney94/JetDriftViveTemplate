@@ -4,7 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Hand : VRTool {
 
-    private ControllerInputTracker vrInput;
     public int deviceIndex;
 
     public float forceMultiplier = 1.5f;

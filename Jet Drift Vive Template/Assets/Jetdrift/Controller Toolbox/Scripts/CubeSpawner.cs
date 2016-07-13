@@ -3,8 +3,6 @@ using System.Collections;
 
 public class CubeSpawner : VRTool {
 
-    private ControllerInputTracker vrInput;
-
     public GameObject cubePrefab;
 
     public float initialForce;
