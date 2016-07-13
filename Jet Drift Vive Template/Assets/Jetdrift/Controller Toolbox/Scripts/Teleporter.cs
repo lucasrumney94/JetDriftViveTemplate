@@ -95,6 +95,7 @@ public class Teleporter : VRTool
                 hitPosition = beamHit.point;
                 validTeleport = false;
 
+                RemoveTargetMarker();
                 //Draw an invalid teleport marker
             }
         }
