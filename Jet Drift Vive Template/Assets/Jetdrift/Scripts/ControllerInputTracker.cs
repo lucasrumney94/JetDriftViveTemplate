@@ -491,11 +491,28 @@ public class ControllerInputTracker : MonoBehaviour {
     /// <summary>
     /// For sending vibration to the controller, still needs testing
     /// </summary>
-    /// <param name="microSeconds"></param>
-    public void VibrateController(ushort microSeconds)
+    /// <param name="strength"></param>
+    public void VibrateController(ushort strength, float duration = 0f)
     {
-        ushort duration = microSeconds > maxPulseLength ? maxPulseLength : microSeconds;
-        controller.TriggerHapticPulse(duration);
+        ushort microSeconds = strength > maxPulseLength ? maxPulseLength : strength;
+        if (duration == 0f)
+        {
+            controller.TriggerHapticPulse(microSeconds);
+        }
+        else
+        {
+            StopCoroutine("Vibrate");
+            StartCoroutine(Vibrate(microSeconds, duration));
+        }
+    }
+
+    private IEnumerator Vibrate(ushort strength, float duration)
+    {
+        for (float i = 0; i < duration; i += Time.deltaTime)
+        {
+            controller.TriggerHapticPulse(strength);
+            yield return null;
+        }
     }
 
     private float GetTouchpadAngle(Vector2 touchpadAxis)
